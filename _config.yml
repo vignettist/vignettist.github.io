@@ -1,0 +1,17 @@
+# Site settings
+
+title: Vignette # Title of your site
+email: logan.williams@alum.mit.edu # Your contant email
+
+description: > # this means to ignore newlines until "baseurl:"
+  Write stories, not slideshows.
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://vignette.cool" # the base hostname & protocol for your site
+
+# Social links.
+# Replace the word 'example' with your username if you want to include the icon in the left sidebar
+# Delete the word 'example' if you don't want to include the icon in the left sidebar
+
+github_username:      loganwilliams  # Replace this with your GitHub username
+# Build settings
+markdown: kramdown
