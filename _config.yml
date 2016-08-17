@@ -4,7 +4,7 @@ title: Vignette # Title of your site
 email: logan.williams@alum.mit.edu # Your contant email
 
 description: > # this means to ignore newlines until "baseurl:"
-  Write stories, not slideshows.
+  Tell stories, not slideshows.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://vignette.cool" # the base hostname & protocol for your site
 
@@ -15,3 +15,7 @@ url: "http://vignette.cool" # the base hostname & protocol for your site
 github_username:      loganwilliams  # Replace this with your GitHub username
 # Build settings
 markdown: kramdown
+
+gems:
+  - jekyll-seo-tag
+  - jekyll-gist

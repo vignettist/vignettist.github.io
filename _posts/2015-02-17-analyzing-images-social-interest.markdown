@@ -14,6 +14,22 @@ This is, perhaps, an even more difficult question to answer. Different people ca
 
 ## Building a dataset
 
+To approach this question, we first need a dataset that we can analyze. Perhaps the largest dataset of "social" images today exists on Facebook. Furthermore, these images are associated with a quantitative response variable, the number of "likes," that we can expect to be imperfectly correlated with the "social interest" we are interested in measuring.
+
+However, Facebook does not make this data easy to access. Though you, as a user, may see your friends photos, as a consumer of the Graph API, you may not. [^graphapi]
+
+The alternative to using Facebook's API is the time-consuming process of scraping pages. The most straightforward way to accomplish this is through the use of a headless browser, essentially a standard web browser that doesn't render to the screen. Then, we can extract the DOM elements that carry the information we need.
+
+With this method, I created a small database of approximately 85,000 images from Facebook.
+
+*It is important to note that this is an incredibly biased dataset -- as I can only build a dataset of my friends, it only contains my friends (and the images that they post.) This means it is very strongly biased towards San Francisco, MIT, and Oregon, and as a result that it is whiter and more educated than the general population. Attempts to generalize from any results here must be done with extreme caution. However, looking at the differences in what different populations find "socially interesting" could be extremely fascinating.*
+
+### Scraping Facebook
+
+The scraping was done using Python, with Selenium and PhantomJS. There's nothing particularly elegant about it -- it loads up pages exactly like you or I would in our web browser (though it loads the mobile version), it scrolls to the bottom of the page, and then it looks for specific DOM elements.
+
+It begins by creating a list of users, then searching their walls for photos to create a list of Faceboook photo IDs. Then, it creates a database with the location of each photo and the number of likes it has received, as well as some other metadata including the date it was posted and who posted it. Finally, the original image is downloaded from Facebook and copies of several sizes are created.
+
 ## Initial observations
 
 ### The "Instagram effect?"
@@ -27,3 +43,5 @@ This is, perhaps, an even more difficult question to answer. Different people ca
 [^lu1]: Lu, et. al. [RAPID: Rating Pictorial Aesthetics using Deep Learning](http://infolab.stanford.edu/~wangz/project/imsearch/Aesthetics/ACMMM2014/lu.pdf). 2014.
 
 [^lu2]: Lu, et. al. [Deep Multi-Patch Aggregation Network for Image Style, Aesthetics, and Quality Estimation](http://infolab.stanford.edu/~wangz/project/imsearch/Aesthetics/ICCV15/lu.pdf). 2015.
+
+[^graphapi]: [Facebook Graph API](https://developers.facebook.com/docs/graph-api)
