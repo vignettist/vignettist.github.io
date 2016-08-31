@@ -1,5 +1,6 @@
 @import url("font-awesome.min.css");
 @import url("http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic");
+@import url("syntax.css");
 
 /*
 	Strata by HTML5 UP
@@ -2074,6 +2075,12 @@
 			width: 100%;
 		}
 
+		.image.chart {
+			display: block;
+			margin: auto auto 2em auto;
+			width: 65%;
+		}
+
 			.image.fit img {
 				width: 100%;
 			}
@@ -3127,3 +3134,15 @@
 			}
 
 	}
+
+ul#markdown-toc li ul {
+	margin: 0;
+}
+
+ul#markdown-toc li ul li ul {
+	margin: 0;
+}
+
+ul#markdown-toc li ul li ul li ul {
+	margin: 0;
+}
