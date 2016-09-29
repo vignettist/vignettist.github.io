@@ -183,11 +183,9 @@ The month-to-month mean log-like time series now shows small variations but no o
 
 Removing the user-dependent effect is a more difficult challenge. Different users have different exposure levels on Facebook and different social contexts. But we are not privy to this information -- the dataset we have is all that we can observe.
 
-One possible normalization strategy is to remove the mean of each user. However, for users who genuinely do post more socially interesting content, this normalization will confound the dataset.
+One possible normalization strategy is to remove the mean of each user. However, for users who genuinely do post more socially interesting content, this normalization will confound the dataset. Another possibility is to do nothing, and accept the uncontrolled effect of each user.
 
-Another possibility is to do nothing, and accept the uncontrolled effect of each user.
-
-A third possibility is to create a set of dummy variables, corresponding to each user, and use these dummy variables as part of the training process. Then, during testing, these dummy variables (which ought to account for the "per user" part of the dependence) are discarded. [TODO: investigate this] As this becomes more difficult when considering non-additive prediction methods, we will for now focus on the first two.
+Both possibilities are bad, so we will instead attempt a "compromise" strategy, of trying to jointly estimate the per-user like factor (which we will assume to be additive in log-likes, or multiplicative in likes) simultaneously with the image-dependent parameters of social interest.
 
 ## Face detection
 
@@ -215,19 +213,207 @@ As before, the box-plot shows the 5/25/50/75/95 percentile ranges of the distrib
 
 ## Image understanding
 
-To be done.
+The use of image understanding algorithms can give insight into the content of these social images (or at least what a classification algorithm trained on [ImageNet](http://image-net.org/) believes the images to contain.) Using [TensorFlow](http://tensorflow.org/) and Google's "Inception" convolutional neural network (CNN) architecture, [^inception] the dataset of images was analyzed for semantic content. The most common categories in the dataset were found to be the following:
 
-## Retraining a convolutional neural network
+<img src="/images/fulls/social-interest/categories/category_counts.png" class="chart image">
 
-To be done.
+These categories do not correspond *exactly* to what the images truly contain, but they do seem to form useful clusters. Below, ten randomly selected images from each category our displayed, along with a subjective evaluation of what images from that category actually contain.
 
-## Results
+<dl>
+<dt>web site, website, internet site, site</dt>
+<dd><img src="/images/fulls/social-interest/categories/0.jpg" class="fit image">
+Seems to be mostly screenshots and memes.
+</dd>
 
-To be done.
+<dt>restaurant, eating house, eating place, eatery</dt>
+<dd><img src="/images/fulls/social-interest/categories/1.jpg" class="fit image">
+Groups of people, social situations.
+</dd>
+
+<dt>wig</dt>
+<dd><img src="/images/fulls/social-interest/categories/2.jpg" class="fit image">
+Selfies, profile-photo-like images.
+</dd>
+
+<dt>stage</dt>
+<dd><img src="/images/fulls/social-interest/categories/3.jpg" class="fit image">
+Stages and group photos.
+</dd>
+
+<dt>sunglasses, dark glasses, shades</dt>
+<dd><img src="/images/fulls/social-interest/categories/4.jpg" class="fit image">
+Selfies and couples (mostly with sunglasses, of course.)
+</dd>
+
+<dt>comic book</dt>
+<dd><img src="/images/fulls/social-interest/categories/5.jpg" class="fit image">
+Drawings and memes.
+</dd>
+
+<dt>book jacket, dust cover, dust jacket, dust wrapper</dt>
+<dd><img src="/images/fulls/social-interest/categories/6.jpg" class="fit image">
+Drawings and memes.
+</dd>
+
+<dt>lakeside, lakeshore</dt>
+<dd><img src="/images/fulls/social-interest/categories/7.jpg" class="fit image">
+Outdoors and landscapes.
+</dd>
+
+<dt>pajama, pyjama, pj's, jammies</dt>
+<dd><img src="/images/fulls/social-interest/categories/8.jpg" class="fit image">
+Family photos.
+</dd>
+
+<dt>suit, suit of clothes</dt>
+<dd><img src="/images/fulls/social-interest/categories/9.jpg" class="fit image">
+Selfies and group photos.
+</dd>
+
+<dt>jersey, T-shirt, tee shirt</dt>
+<dd><img src="/images/fulls/social-interest/categories/10.jpg" class="fit image">
+Selfies and small group photos.
+</dd>
+
+<dt>seat belt, seatbelt</dt>
+<dd><img src="/images/fulls/social-interest/categories/11.jpg" class="fit image">
+Car selfies? (I guess this is a genre of social images.)
+</dd>
+
+<dt>seashore, coast, seacoast, sea-coast</dt>
+<dd><img src="/images/fulls/social-interest/categories/12.jpg" class="fit image">
+Outdoors and landscapes.
+</dd>
+
+<dt>envelope</dt>
+<dd><img src="/images/fulls/social-interest/categories/13.jpg" class="fit image">
+More memes.
+</dd>
+
+<dt>alp</dt>
+<dd><img src="/images/fulls/social-interest/categories/14.jpg" class="fit image">
+Ourdoors and landscapes.
+</dd>
+
+<dt>bow tie, bow-tie, bowtie</dt>
+<dd><img src="/images/fulls/social-interest/categories/15.jpg" class="fit image">
+Formal event portraits.
+</dd>
+
+<dt>cliff, drop, drop-off</dt>
+<dd><img src="/images/fulls/social-interest/categories/16.jpg" class="fit image">
+Outdoors, rock climbing.
+</dd>
+
+<dt>mortarboard</dt>
+<dd><img src="/images/fulls/social-interest/categories/17.jpg" class="fit image">
+Graduation photos. (Possible dataset bias, here!)
+</dd>
+
+<dt>plate</dt>
+<dd><img src="/images/fulls/social-interest/categories/18.jpg" class="fit image">
+Food photos.
+</dd>
+
+<dt>valley, vale</dt>
+<dd><img src="/images/fulls/social-interest/categories/19.jpg" class="fit image">
+Outdoors and landscapes.
+</dd>
+</dl>
+
+### Correlation with likes
+
+<img src="/images/fulls/social-interest/categories/category_distribution.png" class="chart image">
+
+Selfie, small group, family, and graduation photos seem to garner the most Facebook attention, while landscapes and outdoor photos receive the least. Most other categories are in a fairly narrow band in the middle, without statistically significant deviation from the mean.
+
+On first glance, this doesn't seem incredibly promising for the prospect of using semantic image data for predicting Facebook popularity. But we can try anyway.
+
+## Transfer learning
+
+Transfer learning is a technique where the interim result from a pretrained machine learning algorithm is used to train for a new type of output. For example, the Inception network may be [retrained to classify new varieties of objects](https://www.tensorflow.org/versions/r0.9/how_tos/image_retraining/index.html). This can be especially useful when the training dataset is small, which is approximately true in this case, with only 72,000 images. It can also be much faster than retraining an entire network. In this case, the final pooling layer of the Inception network, a layer of size 2048x1, is computed for each image.
+
+### Transfer learning with other ML algorithms
+
+We can use these 2048 values, along with summary statistics from the face detection exploration, as features of our data directly with many common machine learning algorithms. The two that I will explore here are support vector machines and boosted decision trees.
+
+### Transfer learning with an SVM
+
+The first approach we can throw at this prediction problem is a support vector machine, a well understood machine learning technique that has many nice properties. How can we evaluate correctness of our prediction? The mathematically-nicest way to do this is to use the mean-square-error (or root-mean-square-error) as an error signal, and attempt to minimize that. However, this is not perfectly equivalent to what we want to do, as we are more interested in relative differences between images on a per-user basis.
+
+#### A better error estimate
+
+Instead, we can estimate the effectiveness of our predictor by calculating the percentage of comparisons between images in the same user that it predicts correctly. If a user has 50 images, there are 50*49/2 = 1225 possible comparisons between images. We can expect to get 50% of the wrong if we are randomly guessing. If we got 100% of them correct, then we could establish the correct rank order of images.
+
+After performing a grid search establish the best SVM parameters, the best we can do is predict comparisons with 55.9% accuracy. (Trained with 1/10 the data in order to speed comparisons of methods.) This isn't great, but it's better than random chance!
+
+Scatter plotting the predicted likes against the validation likes shows a weak correlation. (I hope.)
+
+[Graph of this]
+
+#### Using user data
+
+Perhaps the result can be improved if data about the user responsible for each image was included in the training step. Then, predictions involving image features alone, and not information about the user, could be considered to be true predictions of social interest based on image content. Of course, it won't work out this cleanly due to the rbf kernel involving many combinations of predictors, some of which will be both image predictor features and user features.
+
+During testing, the test images have the user information zeroed out -- just the image features alone are provided to the SVM.
+
+After performing a second grid search, the best we can do is 56.4% -- a modest but significant improvement over training without use of user info. However, this is still trained with 1/10 of the data. Training with the complete dataset improves this result slightly to 56.5%, though it significantly increases the computational time.
+
+[Graph of this]
+
+Note that when the validation data is scatter plotted, the correlation between predicted and actual likes is non-existent. The r^2 value is just 0.017. This is expected as each "user cluster" of images is shifted more-or-less randomly, though they should be internally consistent.
+
+[10x10 graphs]
+
+### Transfer learning with boosted trees
+
+#### Simultaneous estimation of user-dependent effect
+
+### Transfer learning with a neural network
+
+Above this, we construct a new network, consisting of a fully connected layer that reduces the size to 1000x1, a drop-out layer, a fully connected layer that reduces the size to 500x1, a second drop-out layer, and a final linear layer that reduces the size to a single variable. Unlike a classification problem, where we are attempting to match a probability distribution over categories, we are now trying to predict the output of a quantitative variable. So, rather than attempting to minimize the [cross-entropy](http://colah.github.io/posts/2015-09-Visual-Information/) of two distributions, we will try to minimize the mean squared error of the predicted log-like value.
+
+As this network is trained, the MSE quickly drops to near a minimum. In this graph, captured from TensorBoard during the training process, the orange line is the test error, and the blue line is the training error, which has high variance due to the smaller batch size and the dropout layers.
+
+<img src="/images/fulls/social-interest/training/mse.png" class="fit image" />
+
+After 20,000 steps, the training was terminated, and performance was tested on a hold-out validation set of images.
+
+## Results on a non-Facebook dataset
+
+Another way of evaluating the performance of these methods is by subjectively evaluating the performance on an unscored, non-Facebook dataset. In this case, I am using a donated set of photos from a friend of mine. We can look at the evaluated rankings of the photos taken on a particular date.
+
+### SVM
+
+[Photos from Bilal dataset SVM]
+
+### Boosted decision trees
+
+[Photos from Bilal dataset boosted]
+
+### Neural network retraining
+
+[Photos from Bilal dataset NN]
+
+## Next steps
+
+There are several apparent avenues for future investigation.
+
+### How well can humans even do this?
+
+In the introduction, I discussed how I thought that this would be a difficult, underdefined task. After all, even humans have difficulty evaluating "social interest." But how well would humans perform on this same task? (Choosing the more interesting of a pair of images.) I'm not completely sure -- it would certainly be an interesting Mechanical Turk experiment to set up.
+
+### Different predictive features
+
+Maybe image semantic analysis features really aren't the most predictive. What about the hidden layers of a network trained on AVA[^ava], or a face-detection network? (Schaar cascades were used for the face data above.)
+
+### Training a neural network
+
+One direction that I did not investigate is the complete training of a neural network from scratch. This was for two reasons -- a lack of computing hardware, and a lack of data. However, I have since obtained a modern GPU and downloaded some 300,000 additional Facebook images, perhaps making this problem more tractable.
 
 ## Conclusions
 
-To be done.
+Expectations for success were intially minimal, and those expectations have been mostly met. Weak correlations have been found with expected image properties, including the 
 
 ## Citations
 
@@ -240,3 +426,7 @@ To be done.
 [^lu2]: Lu, et. al. [Deep Multi-Patch Aggregation Network for Image Style, Aesthetics, and Quality Estimation](http://infolab.stanford.edu/~wangz/project/imsearch/Aesthetics/ICCV15/lu.pdf). 2015.
 
 [^graphapi]: [Facebook Graph API](https://developers.facebook.com/docs/graph-api)
+
+[^inception]: Szegedy, et. al. [Going Deeper with Convolutions](https://arxiv.org/abs/1409.4842). 2014.
+
+[^ava]: Naila Murray, Luca Marchesotti, Florent Perronnin. AVA: A Large-Scale Database for Aesthetic Visual Analysis. CVPR 2012.

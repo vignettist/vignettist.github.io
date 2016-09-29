@@ -1,5 +1,7 @@
 @import url("font-awesome.min.css");
 @import url("http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic");
+/*@import url("https://fonts.googleapis.com/css?family=Vollkorn");*/
+/*@import url("https://fonts.googleapis.com/css?family=Lato");*/
 @import url("syntax.css");
 
 /*
@@ -1568,7 +1570,7 @@
 
 	body, input, select, textarea {
 		color: #a2a2a2;
-		font-family: "Source Sans Pro", Helvetica, sans-serif;
+		font-family:  "Source Sans Pro", Helvetica, sans-serif;
 		font-size: 16pt;
 		font-weight: 400;
 		line-height: 1.75em;
@@ -1608,7 +1610,9 @@
 		font-weight: 400;
 		line-height: 1em;
 		margin: 0 0 1em 0;
+		/*font-family: "Vollkorn";*/
 	}
+
 
 		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 			color: inherit;
@@ -3145,4 +3149,17 @@ ul#markdown-toc li ul li ul {
 
 ul#markdown-toc li ul li ul li ul {
 	margin: 0;
+}
+
+dt {
+	font-weight: bold;
+	color: #787878;
+}
+
+dd .image.fit {
+	margin-bottom: 1em;
+}
+
+dd {
+	margin-bottom: 2em;
 }
