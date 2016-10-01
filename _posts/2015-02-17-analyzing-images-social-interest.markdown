@@ -137,7 +137,7 @@ I have a hypothesis for this aspect ratio dependence: the use of a square-crop i
 
 ## Looking at the images
 
-Let's begin looking at the actual images in the dataset. A good place to start might be the most popular images. Below are the ten images with the most likes (after cropping to a square region in the center of the image and resizing to 256x256 pixels.)
+Let's begin looking at the actual images in the dataset. A good place to start might be the most popular images. Below are the ten images with the most likes (after cropping to a square region in the center of the image and resizing to 256x256 pixels.) Faces have been blurred in these images, but the content is still recognizable.
 
 <img src="/images/fulls/social-interest/top10-1/montage.jpg" class="fit image">
 
@@ -343,57 +343,71 @@ The first approach we can throw at this prediction problem is a support vector m
 
 #### A better error estimate
 
-Instead, we can estimate the effectiveness of our predictor by calculating the percentage of comparisons between images in the same user that it predicts correctly. If a user has 50 images, there are 50*49/2 = 1225 possible comparisons between images. We can expect to get 50% of the wrong if we are randomly guessing. If we got 100% of them correct, then we could establish the correct rank order of images.
+Instead, we can estimate the effectiveness of our model by calculating the percentage of comparisons between images in the same user that it predicts correctly. If a user has 50 images, there are 50*49/2 = 1225 possible comparisons between images. We can expect to get 50% of the wrong if we are randomly guessing. If we got 100% of them correct, then we could establish the correct rank order of images.
 
 After performing a grid search establish the best SVM parameters, the best we can do is predict comparisons with 55.9% accuracy. (Trained with 1/10 the data in order to speed comparisons of methods.) This isn't great, but it's better than random chance!
 
-Scatter plotting the predicted likes against the validation likes shows a weak correlation. (I hope.)
-
-[Graph of this]
-
 #### Using user data
 
-Perhaps the result can be improved if data about the user responsible for each image was included in the training step. Then, predictions involving image features alone, and not information about the user, could be considered to be true predictions of social interest based on image content. Of course, it won't work out this cleanly due to the rbf kernel involving many combinations of predictors, some of which will be both image predictor features and user features.
+Perhaps the result can be improved if data about the user responsible for each image was included in the training step. Then, predictions involving image features alone, and not information about the user, could be considered to be true predictions of social interest based on image content. Of course, it won't work out this cleanly due to the rbf kernel involving many combinations of predictors, some of which will be both image features and user features.
 
 During testing, the test images have the user information zeroed out -- just the image features alone are provided to the SVM.
 
 After performing a second grid search, the best we can do is 56.4% -- a modest but significant improvement over training without use of user info. However, this is still trained with 1/10 of the data. Training with the complete dataset improves this result slightly to 56.5%, though it significantly increases the computational time.
 
-[Graph of this]
+<img src="/images/fulls/social-interest/ml/svm_performance.png" class="chart image">
 
 Note that when the validation data is scatter plotted, the correlation between predicted and actual likes is non-existent. The r^2 value is just 0.017. This is expected as each "user cluster" of images is shifted more-or-less randomly, though they should be internally consistent.
 
-[10x10 graphs]
+<img src="/images/fulls/social-interest/ml/svm_user_performance.png" class="chart image">
+
+Well, somewhat internally consistent. It's not great, or even clear that it is working at all. Some of these look worse than random guessing. Let's try a few other methods of approaching this problem.
 
 ### Transfer learning with boosted trees
 
+Boosted decision trees work much better for this problem, due to the high dimensionality of the input data. Fairly easily, we are able to obtain a 56.9% accuracy, better than achieved with the SVM, without even taking into account user information. Additionally, this is substantially faster than an SVM.
+
+<img src="/images/fulls/social-interest/ml/boosted_scatter.png" class="chart image">
+
 #### Simultaneous estimation of user-dependent effect
+
+How can we modify the decision tree to incorporate user information and achieve a better result? Since a boosted decision tree is a general additive model, one possibility is to use the one-hot user data as a training feature directly. However, this has its downsides -- we don't want a non-stump decision tree to use both user and image information. If we restrict the max-depth of each tree to 1, making every tree a stump, then this is not an issue, but performance is degraded.
+
+Another possibility is to simultaneously estimate a per-user additive factor as we fit additional trees to the data. My first attempt at doing this involves alternately fitting 10 trees to the data, calculating the per-user mean error, and subtracting 20% of this per-user mean error from the log-like training value. Using this method, the accuracy increases to 57.1%, which is a fairly minor improvement.
+
+The second method of estimating the per user additive factor I tried was as follows: apply gradient boosting to fit trees until reaching an early stopping criterion, calculate the per-user mean error on the training data, subtract that from the training log-likes, start over, and repeat. In this iterative way, the per user additive factor can be estimated. This process produces a 58.0% accuracy -- comparitavely quite good! -- although the training time is very long, as it must fit a boosted gradient tree model several times over.
+
+Essentially, we have taken the standard gradient boosting algorithm and wrapped it in a gradient descent on the per-user mean. This first implementation subtracted the entire user mean on each step -- a very naive form of gradient descent that attempts to finish everything in one jump. By decreasing this learning rate 0.5, a 58.9% accuracy can be achieved, and by reducing it even further, 
+
+<img src="/images/fulls/social-interest/ml/boosted_scatter_user_dep.png" class="chart image">
+
+<img src="/images/fulls/social-interest/ml/boosted_user_scatter_10up.png" class="chart image">
+
+This model is the model that will be used going forwards.
 
 ### Transfer learning with a neural network
 
-Above this, we construct a new network, consisting of a fully connected layer that reduces the size to 1000x1, a drop-out layer, a fully connected layer that reduces the size to 500x1, a second drop-out layer, and a final linear layer that reduces the size to a single variable. Unlike a classification problem, where we are attempting to match a probability distribution over categories, we are now trying to predict the output of a quantitative variable. So, rather than attempting to minimize the [cross-entropy](http://colah.github.io/posts/2015-09-Visual-Information/) of two distributions, we will try to minimize the mean squared error of the predicted log-like value.
+The final and perhaps most obvious method of preidction investigated was through the use of a neural network. After the inception-net pool layer, we construct a new network, consisting of a fully connected layer that reduces the size to 1000x1, a drop-out layer, a fully connected layer that reduces the size to 500x1, and a final linear layer that reduces the size to a single variable. This network is somewhat different from most neural network topologies, as unlike a classification problem, where we are attempting to match a probability distribution over categories, we are now trying to predict the output of a quantitative variable. So, rather than attempting to minimize the [cross-entropy](http://colah.github.io/posts/2015-09-Visual-Information/) of two distributions, we will try to minimize the mean squared error of the predicted log-like value.
 
 As this network is trained, the MSE quickly drops to near a minimum. In this graph, captured from TensorBoard during the training process, the orange line is the test error, and the blue line is the training error, which has high variance due to the smaller batch size and the dropout layers.
 
-<img src="/images/fulls/social-interest/training/mse.png" class="fit image" />
+<img src="/images/fulls/social-interest/ml/nn_mse.png" class="chart image" />
 
-After 20,000 steps, the training was terminated, and performance was tested on a hold-out validation set of images.
+An interesting thing can also be seen here, where the standard deviation of the output first falls to close to zero, as the neural network learns to approximate the mean of the training set, before slowly rising and it learns structure from the image features.
+
+<img src="/images/fulls/social-interest/ml/nn_std.png" class="chart image" />
+
+The training was terminated after about 11,000 steps for early stopping criteria, and performance was tested on the validation set to achieve a performance of XX.X%.
+
+While the neural network approach was not the most succesful algorithm for predicting social interest in this experiment, it has the most promise for future development. By retraining the entirety of a classification network, and incorporating other networks, such as those trained for visual aesthetics[^lu1] or even pornography[^yahoo], the performance of the neural network model could exceed the performance of boosted trees significantly.
+
+[NN performance]
 
 ## Results on a non-Facebook dataset
 
-Another way of evaluating the performance of these methods is by subjectively evaluating the performance on an unscored, non-Facebook dataset. In this case, I am using a donated set of photos from a friend of mine. We can look at the evaluated rankings of the photos taken on a particular date.
+Another way of evaluating the performance of these methods is by subjectively evaluating the performance on an unscored, non-Facebook dataset. In this case, I am using a donated set of photos from a friend of mine. As this is also the final application of the model, it is the truest evaluation of its usefulness.
 
-### SVM
-
-[Photos from Bilal dataset SVM]
-
-### Boosted decision trees
-
-[Photos from Bilal dataset boosted]
-
-### Neural network retraining
-
-[Photos from Bilal dataset NN]
+We will look at the evaluated rankings of the set of photos taken on a particular date, and subjectively evaluate its accuracy. We will be using the gradient boosted tree model created with simultaneous estimation of the per-user additive parameters.
 
 ## Next steps
 
@@ -401,11 +415,11 @@ There are several apparent avenues for future investigation.
 
 ### How well can humans even do this?
 
-In the introduction, I discussed how I thought that this would be a difficult, underdefined task. After all, even humans have difficulty evaluating "social interest." But how well would humans perform on this same task? (Choosing the more interesting of a pair of images.) I'm not completely sure -- it would certainly be an interesting Mechanical Turk experiment to set up.
+In the introduction, I discussed how I thought that this would be a difficult, underdefined task. After all, even humans have difficulty evaluating "social interest." But how well would humans perform on this same task, that of choosing the more interesting of a pair of images? I'm not completely sure -- it would certainly be an interesting Mechanical Turk experiment to set up.
 
 ### Different predictive features
 
-Maybe image semantic analysis features really aren't the most predictive. What about the hidden layers of a network trained on AVA[^ava], or a face-detection network? (Schaar cascades were used for the face data above.)
+Maybe image semantic analysis features really aren't the most predictive. What about the hidden layers of a network trained on AVA[^ava], or a face-detection network? (Schaar cascades were used for the face data above.) After all, aesthetic parameters such as image sharpness, saturation, and composition, and deeper face attributes such as emotion certainly affect social interest.
 
 ### Training a neural network
 
@@ -413,7 +427,11 @@ One direction that I did not investigate is the complete training of a neural ne
 
 ## Conclusions
 
-Expectations for success were intially minimal, and those expectations have been mostly met. Weak correlations have been found with expected image properties, including the 
+Expectations for success were intially minimal, and those expectations have been mostly met. Weak correlations have been found with expected image properties, including the presence of faces and the classified category of the image. The best trained classifier has a slightly better than chance likelihood of correctly classifying images according to social interest.
+
+## Appendix
+
+Source code for this exploration, in the form of iPython notebooks, is available here, and is licensed under the MIT License. Words are Copyright 2016, Logan Williams. All images are copyright of their owners and reproduced here under fair use.
 
 ## Citations
 
@@ -430,3 +448,5 @@ Expectations for success were intially minimal, and those expectations have been
 [^inception]: Szegedy, et. al. [Going Deeper with Convolutions](https://arxiv.org/abs/1409.4842). 2014.
 
 [^ava]: Naila Murray, Luca Marchesotti, Florent Perronnin. AVA: A Large-Scale Database for Aesthetic Visual Analysis. CVPR 2012.
+
+[^yahoo]: Jay Mahadeokar and erry Pesavento: [Open Sourcing a Deep Learning Solution for Detecting NSFW Images](https://yahooeng.tumblr.com/post/151148). 2016.
