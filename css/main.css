@@ -2083,6 +2083,23 @@
 			width: 100%;
 		}
 
+		.fiveup {
+			display: flex;
+			align-items: center;
+		}
+
+		.scoreim {
+			width: 20%;
+			padding: 5px;
+		}
+
+		.image.fiveup {
+			width: 100%;
+			height: auto;
+			/*width: 18%;*/
+			/*height: auto;*/
+		}
+
 		.image.chart {
 			display: block;
 			margin: auto auto 2em auto;
