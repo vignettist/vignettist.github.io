@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Some thoughts on images and memory
+published: false
 ---
 
 ## The family album
