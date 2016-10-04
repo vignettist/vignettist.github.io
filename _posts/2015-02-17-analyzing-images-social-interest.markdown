@@ -197,7 +197,7 @@ After performing this analysis on every image in the dataset, a box-plot can be 
 
 <img src="/images/fulls/social-interest/faces/num_faces.png" class="chart image">
 
-If we look at the time-normalized data instead, this correlation is slightly expanded by about 3%. While this is a very small difference (and very difficult to observe directly in the graph) it is an indication that the time-normalization process reduced the "noise" in the original dataset slightly.
+If we look at the time-normalized data instead, this correlation is slightly expanded by about 3%. While this is a very small difference (and very difficult to observe directly in the graph) it is an indication that the time-normalization process reduced the noise in the original dataset slightly.
 
 <img src="/images/fulls/social-interest/faces/num_faces_normalized.png" class="chart image">
 
@@ -363,7 +363,7 @@ Note that when the validation data is scatter plotted, the correlation between p
 
 Well, somewhat internally consistent. It's not great, or even clear that it is working at all. Some of these look worse than random guessing. Let's try a few other methods of approaching this problem.
 
-### Transfer learning with boosted trees
+### Transfer learning with trees
 
 Boosted decision trees work much better for this problem, due to the high dimensionality of the input data. Fairly easily, we are able to obtain a 56.9% accuracy, better than achieved with the SVM, without even taking into account user information. Additionally, this is substantially faster than an SVM.
 
@@ -377,7 +377,7 @@ Another possibility is to simultaneously estimate a per-user additive factor as 
 
 The second method of estimating the per user additive factor I tried was as follows: apply gradient boosting to fit trees until reaching an early stopping criterion, calculate the per-user mean error on the training data, subtract that from the training log-likes, start over, and repeat. In this iterative way, the per user additive factor can be estimated. This process produces a 58.0% accuracy -- comparitavely quite good! -- although the training time is very long, as it must fit a boosted gradient tree model several times over.
 
-Essentially, we have taken the standard gradient boosting algorithm and wrapped it in a gradient descent on the per-user mean. This first implementation subtracted the entire user mean on each step -- a very naive form of gradient descent that attempts to finish everything in one jump. By decreasing this learning rate 0.5, a 58.9% accuracy can be achieved, and by reducing it even further, 
+Essentially, we have taken the standard gradient boosting algorithm and wrapped it in a gradient descent on the per-user mean. This first implementation subtracted the entire user mean on each step -- a very naive form of gradient descent that attempts to finish everything in one jump. By decreasing this learning rate, a slightly better 58.1% accuracy can be achieved.
 
 <img src="/images/fulls/social-interest/ml/boosted_scatter_user_dep.png" class="chart image">
 
@@ -403,17 +403,189 @@ While the neural network approach was not the most succesful algorithm for predi
 
 [NN performance]
 
-## Results on a non-Facebook dataset
+## Results
+
+Evaluated on a hold-out test dataset, (unique from the training and validation datasets used previously) only 54.7% of comparisons were correctly evaluated. This implies that there may have been some overfitting of the validation dataset during the hyperparameter search. Alternatively, perhaps the test and validation datasets are too small, increasing the variance of this performance metric.
+
+### On a non-Facebook dataset
 
 Another way of evaluating the performance of these methods is by subjectively evaluating the performance on an unscored, non-Facebook dataset. In this case, I am using a donated set of photos from a friend of mine. As this is also the final application of the model, it is the truest evaluation of its usefulness.
 
 We will look at the evaluated rankings of the set of photos taken on a particular date, and subjectively evaluate its accuracy. We will be using the gradient boosted tree model created with simultaneous estimation of the per-user additive parameters.
 
+In each case, a wide range of predicted values were observed. Let's look at the top 5 and bottom 5 images for each day, excluding [near duplicates](http://exclav.es/2016/07/04/near-duplicate-detection-wavelets/). 
+
+<img src="/images/fulls/social-interest/evaluation/image_rank_day_2.png" class="chart image" />
+
+**Top 5:**
+
+<div class="fiveup">
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/0-0.236570566893.jpg" class="fiveup image" />
+		0.24
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/2-0.0846151411533.jpg" class="fiveup image" />
+		0.085
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/3-0.0546078383923.jpg" class="fiveup image" />
+		0.055
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/4-0.00846081972122.jpg" class="fiveup image" />
+		0.008
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/6--0.00668597221375.jpg" class="fiveup image" />
+		-0.007
+	</div>
+</div>
+
+**Bottom 5:**
+
+<div class="fiveup">
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/27--0.290789484978.jpg" class="fiveup image" />
+		-0.291
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/26--0.254970729351.jpg" class="fiveup image" />
+		-0.255
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/24--0.219216883183.jpg" class="fiveup image" />
+		-0.219
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/23--0.208859860897.jpg" class="fiveup image" />
+		-0.209
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day2/22--0.193027734756.jpg" class="fiveup image" />
+		-0.193
+	</div>
+</div>
+
+In this first example day, we see characteristically mixed results. The most likely image to be of social interest is, indeed a great image from that day. The third image, a close variant of the first (but not a near duplicate) is another "hit." However, as the content of these two images is very similar, it would be expected that they produce similar scores, which they do not. This indicates a need for improvement -- perhaps inflating the training dataset size with crops and rotations of the original images would be a model more robust to these minor variations. The other two images are both okay, and the fifth should not have been ranked nearly as highly as it was.
+
+Of the bottom 5 images, two (the fourth and fifth) show a scene that I think would hold social interest -- hiking and setting up camp.
+
+<img src="/images/fulls/social-interest/evaluation/image_rank_day_1.png" class="chart image" />
+
+**Top 5:**
+
+<div class="fiveup">
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/0-0.102307856083.jpg" class="fiveup image" />
+		0.102
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/1-0.0760345160961.jpg" class="fiveup image" />
+		0.076
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/3-0.0522575676441.jpg" class="fiveup image" />
+		0.052
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/4-0.0502961874008.jpg" class="fiveup image" />
+		0.050
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/5-0.0500894188881.jpg" class="fiveup image" />
+		-0.050
+	</div>
+</div>
+
+**Bottom 5:**
+
+<div class="fiveup">
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/98--0.385226011276.jpg" class="fiveup image" />
+		-0.385
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/97--0.367828667164.jpg" class="fiveup image" />
+		-0.368
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/95--0.303746163845.jpg" class="fiveup image" />
+		-0.304
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/94--0.278033137321.jpg" class="fiveup image" />
+		-0.278
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day1/91--0.254591166973.jpg" class="fiveup image" />
+		-0.254
+	</div>
+</div>
+
+The model performs significantly better on this day, finding several great images of people, groups, and objects of interest on a day with nearly one hundred images. Of the bottom performing images, I personally find several of them nice, but we do know from previous investigation that landscapes tend to perform poorly. The fifth worst image likely should have been ranked higher, as it is of bees, a somewhat unusual subject.
+
+<img src="/images/fulls/social-interest/evaluation/image_rank_day_3.png" class="chart image" />
+
+**Top 5:**
+
+<div class="fiveup">
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/0-0.121648490429.jpg" class="fiveup image" />
+		0.122
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/1-0.110284596682.jpg" class="fiveup image" />
+		0.110
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/4-0.0724286735058.jpg" class="fiveup image" />
+		0.072
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/6-0.0502673685551.jpg" class="fiveup image" />
+		0.050
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/8-0.00772568583488.jpg" class="fiveup image" />
+		0.007
+	</div>
+</div>
+
+**Bottom 5:**
+
+<div class="fiveup">
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/25--0.238839328289.jpg" class="fiveup image" />
+		-0.239
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/24--0.191740334034.jpg" class="fiveup image" />
+		-0.192
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/23--0.178450167179.jpg" class="fiveup image" />
+		-0.178
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/22--0.15498816967.jpg" class="fiveup image" />
+		-0.155
+	</div>
+	<div class="scoreim">
+		<img src="/images/fulls/social-interest/evaluation/day3/21--0.154493629932.jpg" class="fiveup image" />
+		-0.154
+	</div>
+</div>
+
+The top four images are all great picks for this day. Number five is somewhat iffy, but it could make sense in a narrative for setting a sense of place. The bottom four are all fairly missable photos. (The landscape with the clouds is a very blurry photo, a sharper version of it was rated higher.) The photo of the shadow, ranked fifth worst, is actually quite nice.
+
+These three days worth of photos provide a typical cross-section into how the model performs currently. Overall, it is not great, though it is sometimes able to identify certain images that are likely to be socially interesting. There are significant issues that would be present in attempting to use this model for highlighting important images in a user interface. In order to be understandable and intuitive to the user, a less opaque model, such as one that simply highlighted images with people in them, would be much more usable.
+
 ## Next steps
 
-There are several apparent avenues for future investigation.
+All is not lost, however! There are several apparent avenues for future investigation.
 
-### How well can humans even do this?
+### How well can humans do this?
 
 In the introduction, I discussed how I thought that this would be a difficult, underdefined task. After all, even humans have difficulty evaluating "social interest." But how well would humans perform on this same task, that of choosing the more interesting of a pair of images? I'm not completely sure -- it would certainly be an interesting Mechanical Turk experiment to set up.
 
@@ -421,17 +593,23 @@ In the introduction, I discussed how I thought that this would be a difficult, u
 
 Maybe image semantic analysis features really aren't the most predictive. What about the hidden layers of a network trained on AVA[^ava], or a face-detection network? (Schaar cascades were used for the face data above.) After all, aesthetic parameters such as image sharpness, saturation, and composition, and deeper face attributes such as emotion certainly affect social interest.
 
+### Using more training data
+
+Since beginning this project, I have obtained an additional 300,000 Facebook images that could be used to extend the training dataset. However, these are from a slightly different source (photo album pages, rather than wall pages), which could create additional noise in the training dataset. A better solution for extending the dataset would be by scraping the wall pages of users that I am not friends with, reducing the "social bias" of the data.
+
 ### Training a neural network
 
-One direction that I did not investigate is the complete training of a neural network from scratch. This was for two reasons -- a lack of computing hardware, and a lack of data. However, I have since obtained a modern GPU and downloaded some 300,000 additional Facebook images, perhaps making this problem more tractable.
+As mentioned above, one direction that I did not investigate is the complete training of a neural network from scratch. This was for two reasons -- a lack of computing hardware, and a lack of data. However, this problem may be more tractable for me in the near future. One method that I am particularly interested in exploring here is weight sharing between networks designed to predict different things -- for example, could an network that simultaneously predicts semantic content, aesthetic quality, and social interest share many of the first few convolutional layers. My suspicion is that it could.
 
 ## Conclusions
 
-Expectations for success were intially minimal, and those expectations have been mostly met. Weak correlations have been found with expected image properties, including the presence of faces and the classified category of the image. The best trained classifier has a slightly better than chance likelihood of correctly classifying images according to social interest.
+> Aim low. Aim so low no one will even care if you succeed. -- Marge Simpson
+
+Expectations for success were intially minimal, and those expectations have been mostly met. Weak correlations have been found with expected image properties, including the presence of faces and the classified category of the image. The best trained classifier has a slightly better than chance likelihood of correctly classifying images according to social interest. Subjective evalution of the results on a dataset from a completely different source return similar results -- slightly better than randomly selecting images. Still, it is definitely better, and that's something.
 
 ## Appendix
 
-Source code for this exploration, in the form of iPython notebooks, is available here, and is licensed under the MIT License. Words are Copyright 2016, Logan Williams. All images are copyright of their owners and reproduced here under fair use.
+Source code for this exploration, in the form of iPython notebooks, is available here, and is licensed under the MIT License. Words are copyright 2016, Logan Williams. All images are copyright their original owners.
 
 ## Citations
 
