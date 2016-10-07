@@ -9,33 +9,37 @@ title: Analyzing photos for "social interest"
 
 ## What makes a photo interesting?
 
-This is a very difficult question to answer, as image processing algorithms don't do well with subjectivity. Flickr has their interestingness algorithm, but it is based primarily on initial user interactions with the image: views, favorites, and comments. [^flickr] How could we tell that an image might be interesting *before* anyone has seen it?
+Interesting photos can remind us of a person or a place or a time, connect us to events distant from where we are now, inform us about the world, and make us want to learn more. What is it that makes a photo interesting? Can we, through analysis of an image alone, determine whether it will be interesting?
+
+Other approaches, such as Facebook's news feed and Flickr's interestingness algorithm, measure interest from user interactions with the image: views, favorites, and comments. [^flickr] How could we tell that an image might be interesting *before* anyone has seen it?
 
 Recent research pushes in convolutional neural networks have produced promising results, showing the feasibility of analyzing images for subjective style, [^karayev] aesthetic quality, [^lu1] or both. [^lu2] However, aesthetic quality as measured by Flickr or DPChallenge users is not exactly what [Vignette](http://vignette.cool) is interested in. We want to know what images will have "*social interest*."
 
-This is, perhaps, an even more difficult question to answer. Different people can find the same image either interesting or uninteresting, depending on whether they know the people photographed or have familiarity with the location. Some people like portraits, some people like landscapes. Some people care if an image is blurry, some people are just happy to see a photo of their niece. This definition of "social interest" will change not only from person to person but also in the same person over time. It is an intensely subjective, vague, personal, and unstable question to try to answer. But let's try anyway.
+Computers do not do well with subjectivity, and it is difficult to image a more subjective, challenging problem than this. Different people can find the same image either interesting or uninteresting, depending on whether they know the people photographed or have familiarity with the location. Some people like portraits, some people like landscapes. Some people care if an image is blurry, some people are just happy to see a photo of their niece. This definition of "social interest" will change not only from person to person but also in the same person over time. It is an intensely subjective, vague, personal, and unstable question to try to answer, and computers almost certainly will not succeed.
+
+But perhaps, there exist some commonalities of interest, some characteristics within an image that can provide a hint that a photo will be interesting, a suggestion rather than a declaration.
 
 ## Building a dataset
 
-To approach this question, we first need a dataset that we can analyze. Perhaps the largest dataset of "social" images today exists on Facebook. Furthermore, these images are associated with a quantitative response variable, the number of "likes," that we can expect to be imperfectly correlated with the "social interest" we are interested in measuring.
+To approach this question as a machine learning problem, we first need a dataset that we can analyze. Perhaps the largest dataset of "social" images today exists on Facebook. Furthermore, these images are associated with a quantitative response variable, the number of "likes," that we expect to be imperfectly correlated with the "social interest" we are interested in measuring.
 
 However, Facebook does not make this data easy to access. Though you, as a user, may see your friends photos, as a consumer of the Graph API, you may not. [^graphapi]
 
 The alternative to using Facebook's API is the time-consuming process of scraping pages. The most straightforward way to accomplish this is through the use of a headless browser, essentially a standard web browser that doesn't render to the screen. Then, we can extract the DOM elements that carry the information we need.
 
-With this method, I created a small database of approximately 85,000 images from Facebook.
+With this method, I have created a small database of approximately 85,000 images from Facebook.
 
-*It is important to note that this is an incredibly biased dataset -- as I can only build a dataset of my friends, it only contains my friends (and the images that they post.) This means it is very strongly biased towards San Francisco, MIT, and Oregon, and as a result that it is whiter and more educated than the general population. Attempts to generalize from any results here must be done with extreme caution. However, looking at the differences in what different populations find "socially interesting" could be extremely fascinating.*
+*It is important to note that this is an incredibly biased dataset -- as I can only build a dataset of my friends, it only contains my friends (and the images that they post.) This means it is very strongly biased towards San Francisco, MIT, and Oregon, and that it is whiter and more educated than the general population. Attempts to generalize from any results here must be done with extreme caution. However, looking at the differences in what different demographics find "socially interesting" could be fascinating research in and of itself.*
 
 ### Scraping Facebook
 
-The scraping was done using Python, with Selenium and PhantomJS. There's nothing particularly elegant about it -- it loads up pages exactly like you or I would in our web browser (though it loads the mobile version), it scrolls to the bottom of the page, and then it looks for specific DOM elements.
+[The scraper](https://github.com/vignettist/social-interest/blob/master/image_scraper.py) was written in Python, with Selenium and PhantomJS. There's nothing particularly elegant about it -- it loads up pages exactly like a standard Facebook user would in our their browser (though it loads the mobile version for speed's sake), it scrolls to the bottom of the page, and then it looks for specific DOM elements.
 
 It begins by creating a list of users, then searching their walls for photos to create a list of Faceboook photo IDs. Then, it creates a database with the location of each photo and the number of likes it has received, as well as some other metadata including the date it was posted and who posted it. Finally, the original image is downloaded from Facebook and copies of several sizes are created.
 
 ## Initial observations
 
-The first interesting thing we might look at doesn't need the images themselves at all -- the distribution of likes.
+Before we begin to analysze the images themselves, we can look at what is revealed through the metadata alone -- timestamps, likes, and sizes.
 
 ### Distribution of likes
 
@@ -47,13 +51,13 @@ Looking at the ratio between subsequent histogram bins reveals that it is not fl
 
 <img src="/images/fulls/social-interest/non-geometric.png" class="chart image">
 
-This can be seen further by looking at the probability of randomly choosen image having n + 1 likes, given that it has at least n likes.
+This can be seen further by looking at the probability of randomly choosen image having $$n + 1$$ likes, given that it has at least $$n$$ likes.
 
 <img src="/images/fulls/social-interest/additional-likes.png" class="chart image">
 
-For an example, though any image on Facebook has a 91.0% chance of receiving at least one vote, an image with 22 likes has a 95.7% chance of receiving at least one additional vote, and image with 44 likes has a 97.2% chance of making it to 45.
+For an example, though any image on a Facebook wall has a 91.0% chance of receiving at least one vote, an image with 22 likes has a 95.7% chance of receiving at least one additional vote, and image with 44 likes has a 97.2% chance of making it to 45.
 
-So what is the distribution? We thought it looked log-normal, so let's try looking at the distribution of log-likes (defined as log_10(likes + 1).)
+So what is the distribution? We thought it looked log-normal, so let's try looking at the distribution of log-likes (defined as $$\log_{10}(\mathrm{likes} + 1)$$.)
 
 <img src="/images/fulls/social-interest/log-like.png" class="chart image">
 
@@ -65,15 +69,15 @@ While clearly not normal, as the attempt at fitting a Gaussian curve shows above
 
 There is also some theoretical reason to believe that log-likes might be a more relevant way of analyzing like data. Intuitively, the difference between 44 likes and 45 likes seems smaller than the difference between 1 like and 2 likes on an image.
 
-Let's say each image has an inherent "social interest" value and the probability that any person likes an image is the product of the social interest value and the probability that they see the image. Since Facebook's news feed shows the most popular content, this probability is a function of the number of likes it has. The number of likes is now an arrival process where the next arrival (like) is accelerated by previous arrivals. I'm not sure if there is a standard distribution representing this kind of process, but it makes sense then that the "social interest" value would be non-linearly, perhaps exponentially, correlated with the total number of likes.
+Let's say each image has an inherent "social interest" value and the probability that any person likes an image is the product of the social interest value and the probability that they see the image. Since Facebook's news feed shows the most popular content, this probability is a function of the number of likes it has. The number of likes is now an arrival process where the next arrival (like) is accelerated by previous arrivals. I'm not sure if there is a standard distribution representing this kind of process, but it makes sense then that the "social interest" value would be non-linearly distributed but postively correlated with the total number of likes.
 
 ### Images over time
 
-The other simple piece of metadata that can provide some initial observation is the timestamp associated with each image.
+The other simple piece of metadata that can provide some initial insight is the timestamp associated with each image.
 
 <img src="/images/fulls/social-interest/2008-2017.png" class="chart image">
 
-Data was pulled from user timelines for 2013-2016, however many images are uploaded before 2013, as users can post older images to their timelines. However, as this data is relatively incomplete, it's not particularly useful for time-series analysis. Let's restrict the chart to 2013-2016.
+Data was pulled from user walls for the years 2013 - 2016, however many images are uploaded before 2013, as users can post older images to their walls. However, as this data is relatively incomplete, it's not particularly useful for time-series analysis. Let's restrict the chart to 2013 - 2016.
 
 <img src="/images/fulls/social-interest/2013-2017.png" class="chart image">
 
@@ -87,9 +91,9 @@ This could be an artifact of more widely shared content, especially political co
 
 <img src="/images/fulls/social-interest/median-likes-2013-2017.png" class="chart image">
 
-Why this is happening is anyone's guess -- Facebook has a lot of control here. Maybe they've been seeing better user engagement, perhaps a product of increased mobile usage. Maybe they've started promoting photos more heavily, keeping them on news feeds for longer. Maybe a combination of the two factors.
+Why this is happening is anyone's guess -- Facebook has a lot of control here. Maybe they've been seeing better user engagement, perhaps a product of increased mobile usage. Maybe they've started promoting photos more heavily, keeping them on news feeds for longer. Maybe users just have more friends linked on Facebook now. Most likely, some combination of all these factors.
 
-As expected for a period of time in which I was finishing undergrad, in grad school, and had many acquantances subject to the academic calendar, Facebook image activity picks up considerably during school breaks (June - August and December.) Alternatively, perhaps everyone simply has more images to post during these time periods. Analyzing the data of students separately from non-students could shed some more light on this.
+As expected for a period of time in which I was finishing undergrad, then in grad school, and had many acquantances subject to the academic calendar, Facebook image activity picks up considerably during school breaks (June - August and December.) Alternatively, perhaps everyone simply has more images to post during these vacation-heavy time periods. Analyzing the data of students separately from non-students could shed some more light on this.
 
 <img src="/images/fulls/social-interest/school_breaks.png" class="chart image">
 
@@ -105,13 +109,13 @@ Images posted just before the weekend get the most likes, unsurprisingly. At thi
 
 <img src="/images/fulls/social-interest/hourly_quantity.png" class="chart image">
 
-And images uploaded first thing in the morning get the most likes (probably as a result fo more views.)
+And images uploaded first thing in the morning get the most likes (likely a result of more views.)
 
 <img src="/images/fulls/social-interest/hourly_median.png" class="chart image">
 
 #### Missing time data?
 
-In looking over this time data, one strange thing stood out to me -- the number of images uploaded on January 1st. This can be seen very clearly in the first plot of 2008 - 2013.
+In looking over this time data, one strange thing stands out -- the number of images uploaded on January 1st. This can be seen very clearly in the first plot of 2008 - 2013.
 
 If we look at the distribution over the minute in the hour in which an image was posted, we see something quite strange.
 
@@ -121,9 +125,9 @@ The effect is even more pronounced looking at the second that an image was uploa
 
 <img src="/images/fulls/social-interest/seconds.png" class="chart image">
 
-It is clear that many images are missing precision in the timestamp. A difference in the client that was used to upload the image perhaps?
+It is clear that many images are missing precision in the timestamp. Perhaps a difference in the client that was used to upload the image?
 
-These small inaccuracies in the time stamp won't affect the social interest analysis that we're interested in much. While we will have to factor out the confounding variable of time, the impact that this variable has on our response (likes) is over a period of years, not hours.
+These small inaccuracies in the time stamp won't affect the social interest analysis that we're interested in much. While we will have to factor out the confounding variable of time, the impact that this variable has on our like response is over a period of years, not hours.
 
 ### The "Instagram effect?"
 
@@ -131,7 +135,7 @@ One interesting result can be found with just the width and height metadata alon
 
 <img src="/images/fulls/social-interest/aspect.png" class="chart image">
 
-Like some of the graphs above, this is a box-plot with the means marked by stars. I have also plotted the 5/95% confidence intervals on the means (calculated by 1.96 x standard error) with gray 'X's.
+Like many of the graphs above, this is a box-plot with the means marked by stars. I have also plotted the 5/95% confidence intervals on the means (calculated by $$1.96\times$$ standard error) with gray 'X's.
 
 I have a hypothesis for this aspect ratio dependence: the use of a square-crop indicates that the person who took the photo excercised more care than average in the process of choosing subject matter, framing a photography, and editing the image. Someone who square-crops images might be someone who takes an interest in "social interest."
 
@@ -157,7 +161,7 @@ Next, let's try restricting it to Facebook users whose walls were crawled in the
 
 This looks mostly like real images now! But, we have decreased the size of the image database to just 50,399 images, and have excluded many snapshot images posted by friends of users.
 
-It really seems to be only the images with large numbers of likes that are problematic. For example, these images posted by users excluded from the above collection, who have more than one image in the dataset, all with 195-199 likes, seem mostly legitimate.
+It really seems to be only the images with large numbers (>200) of likes that are problematic. For example, these images posted by users excluded from the above collection, who have more than one image in the dataset, all with 195-199 likes, seem mostly legitimate.
 
 <img src="/images/fulls/social-interest/top10-4/montage.jpg" class="fit image">
 
@@ -167,7 +171,7 @@ Finally, we know that there is a time dependent trend in likes. Let's restrict i
 
 ### Normalizing likes by time
 
-As shown above, the average number of likes has increased with time. This can also be seen by fitting a linear regression to the log-like value.
+As shown above, the average number of likes has increased with time. This can also be seen by fitting a linear equation to the log-like value.
 
 <img src="/images/fulls/social-interest/trended-scatter.png" class="chart image">
 
@@ -185,19 +189,19 @@ Removing the user-dependent effect is a more difficult challenge. Different user
 
 One possible normalization strategy is to remove the mean of each user. However, for users who genuinely do post more socially interesting content, this normalization will confound the dataset. Another possibility is to do nothing, and accept the uncontrolled effect of each user.
 
-Both possibilities are bad, so we will instead attempt a "compromise" strategy, of trying to jointly estimate the per-user like factor (which we will assume to be additive in log-likes, or multiplicative in likes) simultaneously with the image-dependent parameters of social interest.
+Both possibilities are bad, so we will instead create a "compromise" strategy, of trying to jointly estimate the per-user like factor (which we will assume to be additive in log-likes, or multiplicative in likes) simultaneously with the image-dependent parameters of social interest. This will be returned to later in this blog post.
 
 ## Face detection
 
-The first aspect of the image that I looked at to predict social interest was faces. People like people, and it would be entirely unsurprising if images with people in them tended to garner more likes than images without.
+The first aspect of the image that we will examine in depth as a possible social interest predictor is faces. People like people, and it would be entirely unsurprising if images with people in them tended to garner more likes than images without.
 
-To detect faces, we can use a Haar cascade, a standard multi-scale object recognition algorithm that makes use of Haar wavelets, like the [near-duplicate detection](http://exclav.es/2016/07/04/near-duplicate-detection-wavelets/) explored previously. Haar cascades are implemented in OpenCV through the ``CascadeClassifier`` class.
+To detect faces, we will use a Haar cascade, a standard multi-scale object recognition algorithm that makes use of Haar wavelets,[^viola] like the [near-duplicate detection](http://exclav.es/2016/07/04/near-duplicate-detection-wavelets/) explored previously. Haar cascades are implemented in OpenCV through the ``CascadeClassifier`` class.
 
-After performing this analysis on every image in the dataset, a box-plot can be made of log-likes versus the number of faces visible in each image. A small but significant correlation is observed.
+After performing this analysis on every image in the dataset, a box-plot of log-likes versus the number of faces visible in each image reveals a small but significant correlation is observed.
 
 <img src="/images/fulls/social-interest/faces/num_faces.png" class="chart image">
 
-If we look at the time-normalized data instead, this correlation is slightly expanded by about 3%. While this is a very small difference (and very difficult to observe directly in the graph) it is an indication that the time-normalization process reduced the noise in the original dataset slightly.
+If we look at the time-normalized log-like data instead, the difference in log-likes between each category is expanded by approximately 3%. While this is a very small difference (and very difficult to observe directly in the plot) it is a positive indication that the time-normalization process has slightly reduced the noise present in the original dataset.
 
 <img src="/images/fulls/social-interest/faces/num_faces_normalized.png" class="chart image">
 
@@ -205,15 +209,15 @@ There is also a response visible to the total size of all faces in the image, wh
 
 <img src="/images/fulls/social-interest/faces/face_size_normalized.png" class="chart image">
 
-And, there is a response visible to the size of the largest face visible in the image, which might have a somewhat weaker correlation with the number of faces visible in the image.
+And, there is a response visible to the size of the largest face visible in the image, which might have a somewhat weaker correlation with the number of faces visible in the image. (Selfies, for example, might have a large "largest face.")
 
 <img src="/images/fulls/social-interest/faces/largest_face_size_normalized.png" class="chart image">
 
-As before, the box-plot shows the 5/25/50/75/95 percentile ranges of the distribution. Means are marked with a blue star, and the 5/95% confidence intervals on the means are marked with gray Xs. The effect of faces in the image has a significant impact on the mean, though it does not explain the majority of the variance.
+As before, the box-plot shows the 5/25/50/75/95 percentile ranges of the distribution. Means are marked with a blue star, and the 5/95% confidence intervals on the means are marked with gray Xs. This shows that the effect of faces in the image has a significant impact on the mean, though it does not explain the majority of the variance (distributions are much broader than the difference between images with no faces and faces present.)
 
 ## Image understanding
 
-The use of image understanding algorithms can give insight into the content of these social images (or at least what a classification algorithm trained on [ImageNet](http://image-net.org/) believes the images to contain.) Using [TensorFlow](http://tensorflow.org/) and Google's "Inception" convolutional neural network (CNN) architecture, [^inception] the dataset of images was analyzed for semantic content. The most common categories in the dataset were found to be the following:
+The use of image understanding algorithms can give insight into the content of these social images (or at least what a classification algorithm trained on [ImageNet](http://image-net.org/) believes the images to contain.) Using [TensorFlow](http://tensorflow.org/) and Google's "Inception" deep convolutional neural network architecture, [^inception] the dataset of images was analyzed for semantic content. The most common categories in the dataset were found to be the following:
 
 <img src="/images/fulls/social-interest/categories/category_counts.png" class="chart image">
 
@@ -321,73 +325,25 @@ Outdoors and landscapes.
 </dd>
 </dl>
 
+These categories also suggests an alternative method of [filtering out unwanted non-photographic content](#removing-non-snapshots).
+
 ### Correlation with likes
 
 <img src="/images/fulls/social-interest/categories/category_distribution.png" class="chart image">
 
 Selfie, small group, family, and graduation photos seem to garner the most Facebook attention, while landscapes and outdoor photos receive the least. Most other categories are in a fairly narrow band in the middle, without statistically significant deviation from the mean.
 
-On first glance, this doesn't seem incredibly promising for the prospect of using semantic image data for predicting Facebook popularity. But we can try anyway.
+On first glance, these relatively weak correlations don't seem incredibly promising for the prospect of using semantic image data and face detection for predicting social interest. But we can try anyway.
+
+[this is where I've edited up to]
 
 ## Transfer learning
 
-Transfer learning is a technique where the interim result from a pretrained machine learning algorithm is used to train for a new type of output. For example, the Inception network may be [retrained to classify new varieties of objects](https://www.tensorflow.org/versions/r0.9/how_tos/image_retraining/index.html). This can be especially useful when the training dataset is small, which is approximately true in this case, with only 72,000 images. It can also be much faster than retraining an entire network. In this case, the final pooling layer of the Inception network, a layer of size 2048x1, is computed for each image.
-
-### Transfer learning with other ML algorithms
-
-We can use these 2048 values, along with summary statistics from the face detection exploration, as features of our data directly with many common machine learning algorithms. The two that I will explore here are support vector machines and boosted decision trees.
-
-### Transfer learning with an SVM
-
-The first approach we can throw at this prediction problem is a support vector machine, a well understood machine learning technique that has many nice properties. How can we evaluate correctness of our prediction? The mathematically-nicest way to do this is to use the mean-square-error (or root-mean-square-error) as an error signal, and attempt to minimize that. However, this is not perfectly equivalent to what we want to do, as we are more interested in relative differences between images on a per-user basis.
-
-#### A better error estimate
-
-Instead, we can estimate the effectiveness of our model by calculating the percentage of comparisons between images in the same user that it predicts correctly. If a user has 50 images, there are 50*49/2 = 1225 possible comparisons between images. We can expect to get 50% of the wrong if we are randomly guessing. If we got 100% of them correct, then we could establish the correct rank order of images.
-
-After performing a grid search establish the best SVM parameters, the best we can do is predict comparisons with 55.9% accuracy. (Trained with 1/10 the data in order to speed comparisons of methods.) This isn't great, but it's better than random chance!
-
-#### Using user data
-
-Perhaps the result can be improved if data about the user responsible for each image was included in the training step. Then, predictions involving image features alone, and not information about the user, could be considered to be true predictions of social interest based on image content. Of course, it won't work out this cleanly due to the rbf kernel involving many combinations of predictors, some of which will be both image features and user features.
-
-During testing, the test images have the user information zeroed out -- just the image features alone are provided to the SVM.
-
-After performing a second grid search, the best we can do is 56.4% -- a modest but significant improvement over training without use of user info. However, this is still trained with 1/10 of the data. Training with the complete dataset improves this result slightly to 56.5%, though it significantly increases the computational time.
-
-<img src="/images/fulls/social-interest/ml/svm_performance.png" class="chart image">
-
-Note that when the validation data is scatter plotted, the correlation between predicted and actual likes is non-existent. The r^2 value is just 0.017. This is expected as each "user cluster" of images is shifted more-or-less randomly, though they should be internally consistent.
-
-<img src="/images/fulls/social-interest/ml/svm_user_performance.png" class="chart image">
-
-Well, somewhat internally consistent. It's not great, or even clear that it is working at all. Some of these look worse than random guessing. Let's try a few other methods of approaching this problem.
-
-### Transfer learning with trees
-
-Boosted decision trees work much better for this problem, due to the high dimensionality of the input data. Fairly easily, we are able to obtain a 56.9% accuracy, better than achieved with the SVM, without even taking into account user information. Additionally, this is substantially faster than an SVM.
-
-<img src="/images/fulls/social-interest/ml/boosted_scatter.png" class="chart image">
-
-#### Simultaneous estimation of user-dependent effect
-
-How can we modify the decision tree to incorporate user information and achieve a better result? Since a boosted decision tree is a general additive model, one possibility is to use the one-hot user data as a training feature directly. However, this has its downsides -- we don't want a non-stump decision tree to use both user and image information. If we restrict the max-depth of each tree to 1, making every tree a stump, then this is not an issue, but performance is degraded.
-
-Another possibility is to simultaneously estimate a per-user additive factor as we fit additional trees to the data. My first attempt at doing this involves alternately fitting 10 trees to the data, calculating the per-user mean error, and subtracting 20% of this per-user mean error from the log-like training value. Using this method, the accuracy increases to 57.1%, which is a fairly minor improvement.
-
-The second method of estimating the per user additive factor I tried was as follows: apply gradient boosting to fit trees until reaching an early stopping criterion, calculate the per-user mean error on the training data, subtract that from the training log-likes, start over, and repeat. In this iterative way, the per user additive factor can be estimated. This process produces a 58.0% accuracy -- comparitavely quite good! -- although the training time is very long, as it must fit a boosted gradient tree model several times over.
-
-Essentially, we have taken the standard gradient boosting algorithm and wrapped it in a gradient descent on the per-user mean. This first implementation subtracted the entire user mean on each step -- a very naive form of gradient descent that attempts to finish everything in one jump. By decreasing this learning rate, a slightly better 58.1% accuracy can be achieved.
-
-<img src="/images/fulls/social-interest/ml/boosted_scatter_user_dep.png" class="chart image">
-
-<img src="/images/fulls/social-interest/ml/boosted_user_scatter_10up.png" class="chart image">
-
-This model is the model that will be used going forwards.
+Transfer learning is a technique where the intermediate, hidden result from a pretrained machine learning algorithm is used to train for a new type of output. For example, the Inception network may be [retrained to classify new varieties of objects](https://www.tensorflow.org/versions/r0.9/how_tos/image_retraining/index.html). This can be especially useful when the training dataset is small, which is approximately true in this case, with only 72,000 images. It can also be much faster than retraining an entire network. In this case, the final pooling layer of the Inception network, a layer of size 2048x1, is computed for each image.
 
 ### Transfer learning with a neural network
 
-The final and perhaps most obvious method of preidction investigated was through the use of a neural network. After the inception-net pool layer, we construct a new network, consisting of a fully connected layer that reduces the size to 1000x1, a drop-out layer, a fully connected layer that reduces the size to 500x1, and a final linear layer that reduces the size to a single variable. This network is somewhat different from most neural network topologies, as unlike a classification problem, where we are attempting to match a probability distribution over categories, we are now trying to predict the output of a quantitative variable. So, rather than attempting to minimize the [cross-entropy](http://colah.github.io/posts/2015-09-Visual-Information/) of two distributions, we will try to minimize the mean squared error of the predicted log-like value.
+The most obvious method of applying transfer learning from the Inception classification network to this problem is through the use of a neural network. After the inception-net pool layer, we construct a new network, consisting of a fully connected layer that reduces the size to 1000x1, a drop-out layer, a fully connected layer that reduces the size to 500x1, and a final linear layer that reduces the size to a single variable. This network is somewhat different from most neural network topologies, as unlike a classification problem, where we are attempting to match a probability distribution over categories, we are now trying to predict the output of a quantitative variable. So, rather than attempting to minimize the [cross-entropy](http://colah.github.io/posts/2015-09-Visual-Information/) of two distributions, we will try to minimize the mean squared error of the predicted log-like value.
 
 As this network is trained, the MSE quickly drops to near a minimum. In this graph, captured from TensorBoard during the training process, the orange line is the test error, and the blue line is the training error, which has high variance due to the smaller batch size and the dropout layers.
 
@@ -397,11 +353,65 @@ An interesting thing can also be seen here, where the standard deviation of the 
 
 <img src="/images/fulls/social-interest/ml/nn_std.png" class="chart image" />
 
-The training was terminated after about 11,000 steps for early stopping criteria, and performance was tested on the validation set to achieve a performance of XX.X%.
+The training was terminated after about 14,000 steps for early stopping criteria, and performance was tested on the validation set to achieve a performance of 55.9%. This isn't great, but it's better than random chance!
 
-While the neural network approach was not the most succesful algorithm for predicting social interest in this experiment, it has the most promise for future development. By retraining the entirety of a classification network, and incorporating other networks, such as those trained for visual aesthetics[^lu1] or even pornography[^yahoo], the performance of the neural network model could exceed the performance of boosted trees significantly.
+<img src="/images/fulls/social-interest/ml/nn_performance.png" class="chart image" />
 
-[NN performance]
+<img src="/images/fulls/social-interest/ml/nn_user_performance.png" class="chart image" />
+
+While the neural network approach was not ultimately the most succesful algorithm for predicting social interest in this experiment, it has the most promise for future development. By retraining the entirety of a classification network, and incorporating other networks, such as those trained for visual aesthetics[^lu1] or even pornography[^yahoo], the performance of the neural network model could exceed the performance of boosted trees significantly. Even with these same features, due to the vast number of hyperparameters to adjust, the neural network performance could certainly be improved. However, this task will have to wait for additional time availability and access to more sophisticated computation hardware.
+
+### Transfer learning with other ML algorithms
+
+We can use the 2048 values of the Inception network final pooling layer, along with summary statistics from the face detection exploration, as dataset features directly with many common machine learning algorithms. The two that I will explore here are support vector machines and boosted decision trees.
+
+#### Support vector machines
+
+The first approach we can throw at this prediction problem is a support vector machine, a well understood machine learning technique that has many nice properties. How can we evaluate correctness of our prediction? The mathematically-nicest way to do this is to use the mean-square-error (or root-mean-square-error) as an error signal, and attempt to minimize that, as was done for the neural network above. However, this is not perfectly equivalent to what we want to do, as we are more interested in relative differences between images on a per-user basis.
+
+##### A better error estimate
+
+Instead, we can estimate the effectiveness of our model by calculating the percentage of comparisons between images in the same user that it predicts correctly. If a user has 50 images, there are 50*49/2 = 1225 possible comparisons between images. We can expect to get 50% of the wrong if we are randomly guessing. If we got 100% of them correct, then we could establish the correct rank order of images.
+
+After performing a grid search establish the best SVM parameters, the best we can do is predict comparisons with 55.9% accuracy. (Trained with 1/10 the data in order to speed comparisons of methods by 100-1000x.) This is basically the same accuracy as the neural network achieved.
+
+##### Using user data
+
+Perhaps the result can be improved if data about the user responsible for each image was included in the training step. Then, predictions involving image features alone, and not information about the user, could be considered to be true predictions of social interest based on image content. Of course, it won't work out this cleanly due to the rbf kernel involving many combinations of predictors, some of which will be both image features and user features.
+
+During testing, the test images have the user information zeroed out -- just the image features alone are provided to the SVM.
+
+After performing a second grid search, the best we can do is 56.4% -- a modest but significant improvement over training without use of user info. However, this is still trained with 1/10 of the data. Training with the complete dataset improves this result slightly to 56.5%, though it significantly increases the computational time.
+
+<img src="/images/fulls/social-interest/ml/svm_performance.png" class="chart image">
+
+Note that when the validation data is scatter plotted, the correlation between predicted and actual likes is non-existent. The r<sup>2</sup> value is just 0.017. This is expected as each "user cluster" of images is shifted more-or-less randomly, though they should be internally consistent.
+
+<img src="/images/fulls/social-interest/ml/svm_user_performance.png" class="chart image">
+
+Well, somewhat internally consistent. It's not great, or even clear that it is working at all. Some of these look worse than random guessing. Let's try a few other methods of approaching this problem.
+
+#### Boosted decision trees
+
+Boosted decision trees work much better for this problem, due to the high dimensionality of the input data. Fairly easily, we are able to obtain a 56.9% accuracy, better than achieved with the SVM, without even taking into account user information. Additionally, this is substantially faster than an SVM.
+
+<img src="/images/fulls/social-interest/ml/boosted_scatter.png" class="chart image">
+
+##### Simultaneous estimation of user-dependent effect
+
+How can we modify the decision tree to incorporate user information and achieve a better result? Since a boosted decision tree is a general additive model, one possibility is to use the one-hot user data as a training feature directly. However, this has its downsides -- we don't want a non-stump decision tree to use both user and image information. If we restrict the max-depth of each tree to 1, making every tree a stump, then this is not an issue, but performance is degraded.
+
+Another possibility is to simultaneously estimate a per-user additive factor as we fit additional trees to the data. My first attempt at doing this involves alternately fitting 10 trees to the data, calculating the per-user mean error, and subtracting 20% of this per-user mean error from the log-like training value. Using this method, the accuracy increases to 57.1%, which is a fairly minor improvement.
+
+The second method of estimating the per user additive factor I tried was as follows: apply gradient boosting to fit trees until reaching an early stopping criterion, calculate the per-user mean error on the training data, subtract that from the training log-likes, start over, and repeat. In this iterative way, the per user additive factor can be estimated. This process produces a 58.0% accuracy -- comparitavely quite good! -- although the training time is very long, as it must fit a boosted gradient tree model several times over.
+
+Essentially, we have taken the standard gradient boosting algorithm and wrapped it in a gradient descent on the per-user mean. This first implementation subtracted the entire user mean on each step -- a very naive form of gradient descent that attempts to finish everything in one jump. By decreasing this learning rate, a slightly better 58.1% accuracy can be achieved.
+
+<img src="/images/fulls/social-interest/ml/boosted_w_user.png" class="chart image">
+
+<img src="/images/fulls/social-interest/ml/boost_w_user_user_performance.png" class="chart image">
+
+This model is the model that will be used going forwards.
 
 ## Results
 
@@ -609,7 +619,11 @@ Expectations for success were intially minimal, and those expectations have been
 
 ## Appendix
 
-Source code for this exploration, in the form of iPython notebooks, is available here, and is licensed under the MIT License. Words are copyright 2016, Logan Williams. All images are copyright their original owners.
+Source code for this exploration, in the form of Jupyter notebooks, are available [here](https://github.com/vignettist/social-interest). All code is licensed under the MIT License.
+
+Unfortunately, I cannot release the Facebook image dataset due to privacy concerns.
+
+Text is Copyright 2016, Logan Williams. All images are owned by the originalc creators.
 
 ## Citations
 
@@ -625,6 +639,8 @@ Source code for this exploration, in the form of iPython notebooks, is available
 
 [^inception]: Szegedy, et. al. [Going Deeper with Convolutions](https://arxiv.org/abs/1409.4842). 2014.
 
-[^ava]: Naila Murray, Luca Marchesotti, Florent Perronnin. AVA: A Large-Scale Database for Aesthetic Visual Analysis. CVPR 2012.
+[^ava]: Murray, Marchesotti, and Perronnin. [AVA: A Large-Scale Database for Aesthetic Visual Analysis](http://refbase.cvc.uab.es/files/MMP2012a.pdf). CVPR 2012.
 
-[^yahoo]: Jay Mahadeokar and erry Pesavento: [Open Sourcing a Deep Learning Solution for Detecting NSFW Images](https://yahooeng.tumblr.com/post/151148). 2016.
+[^yahoo]: Mahadeokar and Pesavento: [Open Sourcing a Deep Learning Solution for Detecting NSFW Images](https://yahooeng.tumblr.com/post/151148689421/open-sourcing-a-deep-learning-solution-for). 2016.
+
+[^viola]: Viola and Jones. [Rapid Object Detection using a Boosted Cascade of Simple Features](https://www.cs.cmu.edu/~efros/courses/LBMV07/Papers/viola-cvpr-01.pdf). CVPR 2001.
