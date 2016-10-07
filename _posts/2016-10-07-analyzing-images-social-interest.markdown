@@ -39,7 +39,7 @@ It begins by creating a list of users, then searching their walls for photos to 
 
 ## Initial observations
 
-Before we begin to analysze the images themselves, we can look at what is revealed through the metadata alone -- timestamps, likes, and sizes.
+Before we begin to analyze the images themselves, we can look at what is revealed through the metadata alone -- timestamps, likes, and sizes.
 
 ### Distribution of likes
 
@@ -51,7 +51,7 @@ Looking at the ratio between subsequent histogram bins reveals that it is not fl
 
 <img src="/images/fulls/social-interest/non-geometric.png" class="chart image">
 
-This can be seen further by looking at the probability of randomly choosen image having $$n + 1$$ likes, given that it has at least $$n$$ likes.
+This can be seen further by looking at the probability of randomly chosen image having $$n + 1$$ likes, given that it has at least $$n$$ likes.
 
 <img src="/images/fulls/social-interest/additional-likes.png" class="chart image">
 
@@ -63,13 +63,13 @@ So what is the distribution? We thought it looked log-normal, so let's try looki
 
 <img src="/images/fulls/social-interest/norm_fit.png" class="chart image">
 
-While clearly not normal, as the attempt at fitting a Gaussian curve shows above, it is much closer to normally distributed. This means that intuition about probabilities will be approximately accurate. For example, the mean of a set of log-likes will generally be close to its median. This is very convenient! We can see this clearly by looking at the distrubtion over likes and log-likes as a box-plot. In this plot, the horizontal lines read from top to botton: 95th percentile value, 75th percentile value, median (50%), 25th percentile value, 5th percentile value. The star plots the location of the arithmetic mean.
+While clearly not normal, as the attempt at fitting a Gaussian curve shows above, it is much closer to normally distributed. This means that intuition about probabilities will be approximately accurate. For example, the mean of a set of log-likes will generally be close to its median. This is very convenient! We can see this clearly by looking at the distribution over likes and log-likes as a box-plot. In this plot, the horizontal lines read from top to bottom: 95th percentile value, 75th percentile value, median (50%), 25th percentile value, 5th percentile value. The star plots the location of the arithmetic mean.
 
 <img src="/images/fulls/social-interest/boxplot.png" class="chart image">
 
 There is also some theoretical reason to believe that log-likes might be a more relevant way of analyzing like data. Intuitively, the difference between 44 likes and 45 likes seems smaller than the difference between 1 like and 2 likes on an image.
 
-Let's say each image has an inherent "social interest" value and the probability that any person likes an image is the product of the social interest value and the probability that they see the image. Since Facebook's news feed shows the most popular content, this probability is a function of the number of likes it has. The number of likes is now an arrival process where the next arrival (like) is accelerated by previous arrivals. I'm not sure if there is a standard distribution representing this kind of process, but it makes sense then that the "social interest" value would be non-linearly distributed but postively correlated with the total number of likes.
+Let's say each image has an inherent "social interest" value and the probability that any person likes an image is the product of the social interest value and the probability that they see the image. Since Facebook's news feed shows the most popular content, this probability is a function of the number of likes it has. The number of likes is now an arrival process where the next arrival (like) is accelerated by previous arrivals. I'm not sure if there is a standard distribution representing this kind of process, but it makes sense then that the "social interest" value would be non-linearly distributed but positively correlated with the total number of likes.
 
 ### Images over time
 
@@ -93,7 +93,7 @@ This could be an artifact of more widely shared content, especially political co
 
 Why this is happening is anyone's guess -- Facebook has a lot of control here. Maybe they've been seeing better user engagement, perhaps a product of increased mobile usage. Maybe they've started promoting photos more heavily, keeping them on news feeds for longer. Maybe users just have more friends linked on Facebook now. Most likely, some combination of all these factors.
 
-As expected for a period of time in which I was finishing undergrad, then in grad school, and had many acquantances subject to the academic calendar, Facebook image activity picks up considerably during school breaks (June - August and December.) Alternatively, perhaps everyone simply has more images to post during these vacation-heavy time periods. Analyzing the data of students separately from non-students could shed some more light on this.
+As expected for a period of time in which I was finishing undergrad, then in grad school, and had many acquaintances subject to the academic calendar, Facebook image activity picks up considerably during school breaks (June - August and December.) Alternatively, perhaps everyone simply has more images to post during these vacation-heavy time periods. Analyzing the data of students separately from non-students could shed some more light on this.
 
 <img src="/images/fulls/social-interest/school_breaks.png" class="chart image">
 
@@ -131,13 +131,13 @@ These small inaccuracies in the time stamp won't affect the social interest anal
 
 ### The "Instagram effect?"
 
-One interesting result can be found with just the width and height metadata alone: square-cropped images receive measureably more likes on average:
+One interesting result can be found with just the width and height metadata alone: square-cropped images receive measurably more likes on average:
 
 <img src="/images/fulls/social-interest/aspect.png" class="chart image">
 
 Like many of the graphs above, this is a box-plot with the means marked by stars. I have also plotted the 5/95% confidence intervals on the means (calculated by $$1.96\times$$ standard error) with gray 'X's.
 
-I have a hypothesis for this aspect ratio dependence: the use of a square-crop indicates that the person who took the photo excercised more care than average in the process of choosing subject matter, framing a photography, and editing the image. Someone who square-crops images might be someone who takes an interest in "social interest."
+I have a hypothesis for this aspect ratio dependence: the use of a square-crop indicates that the person who took the photo exercised more care than average in the process of choosing subject matter, framing a photography, and editing the image. Someone who square-crops images might be someone who takes an interest in "social interest."
 
 ## Looking at the images
 
@@ -149,7 +149,7 @@ An immediate issue is visible -- the most popular images are widely shared polit
 
 ### Removing non-snapshots
 
-These images, especially because they have so many likes, will influence our analysis in undesireable ways. Because many of them are one off political posts by users not present in the primary dataset, one approach to remove this content might be by restricting the dataset only to users with a certain number of images present in the dataset. (This will also make it easier to normalize the likes per image by individual users.)
+These images, especially because they have so many likes, will influence our analysis in undesirable ways. Because many of them are one off political posts by users not present in the primary dataset, one approach to remove this content might be by restricting the dataset only to users with a certain number of images present in the dataset. (This will also make it easier to normalize the likes per image by individual users.)
 
 Requiring 4 images decreases the dataset from 85,904 images to 68,509. Unfortunately, though this improves the image selection slightly, it doesn't make as big a difference as we would like. There are still only two photos that seem to be snapshots in the top 10.
 
@@ -296,7 +296,7 @@ More memes.
 
 <dt>alp</dt>
 <dd><img src="/images/fulls/social-interest/categories/14.jpg" class="fit image">
-Ourdoors and landscapes.
+Outdoors and landscapes.
 </dd>
 
 <dt>bow tie, bow-tie, bowtie</dt>
@@ -335,77 +335,77 @@ Selfie, small group, family, and graduation photos seem to garner the most Faceb
 
 On first glance, these relatively weak correlations don't seem incredibly promising for the prospect of using semantic image data and face detection for predicting social interest. But we can try anyway.
 
-[this is where I've edited up to]
-
 ## Transfer learning
 
-Transfer learning is a technique where the intermediate, hidden result from a pretrained machine learning algorithm is used to train for a new type of output. For example, the Inception network may be [retrained to classify new varieties of objects](https://www.tensorflow.org/versions/r0.9/how_tos/image_retraining/index.html). This can be especially useful when the training dataset is small, which is approximately true in this case, with only 72,000 images. It can also be much faster than retraining an entire network. In this case, the final pooling layer of the Inception network, a layer of size 2048x1, is computed for each image.
+Transfer learning is a technique where a partially trained machine learning model is retrained on a new dataset, or when the intermediate, hidden result from a model is used to create features for a new model. For example, the Inception network may be [retrained to classify new varieties of objects](https://www.tensorflow.org/versions/r0.9/how_tos/image_retraining/index.html). This can be especially useful when the training dataset is small, which is approximately true in this case, with only 72,000 images. It can also be much faster than training an entire network from scratch. In this case, the final pooling layer of the Inception network, a layer of size 2048x1, is computed for each image.
 
 ### Transfer learning with a neural network
 
-The most obvious method of applying transfer learning from the Inception classification network to this problem is through the use of a neural network. After the inception-net pool layer, we construct a new network, consisting of a fully connected layer that reduces the size to 1000x1, a drop-out layer, a fully connected layer that reduces the size to 500x1, and a final linear layer that reduces the size to a single variable. This network is somewhat different from most neural network topologies, as unlike a classification problem, where we are attempting to match a probability distribution over categories, we are now trying to predict the output of a quantitative variable. So, rather than attempting to minimize the [cross-entropy](http://colah.github.io/posts/2015-09-Visual-Information/) of two distributions, we will try to minimize the mean squared error of the predicted log-like value.
+The most obvious method of applying transfer learning from the Inception classification network to this problem is with the further use of neural networks. To use a neural network for this problem we construct a new network after the inception-net pooling layer that consists of a fully connected layer, a drop-out layer, a second fully connected layer, and a linear projection to a single social interest variable. This network is somewhat different from most neural network topologies, as unlike in a classification problem, where the network attempts to match a probability distribution over categories, we are now trying to predict the output of a single quantitative variable. So, rather than attempting to minimize the [cross-entropy](http://colah.github.io/posts/2015-09-Visual-Information/) of two distributions, we will try to minimize the mean squared error of the predicted log-like value.
 
-As this network is trained, the MSE quickly drops to near a minimum. In this graph, captured from TensorBoard during the training process, the orange line is the test error, and the blue line is the training error, which has high variance due to the smaller batch size and the dropout layers.
+As this network is trained, the MSE quickly drops to near a minimum. In this graph, captured from [TensorBoard](https://www.tensorflow.org/versions/r0.11/how_tos/summaries_and_tensorboard/index.html) during the training process, the orange line is the test error, and the blue line is the training error, which has high variance due to the smaller batch size and the dropout layers.
 
 <img src="/images/fulls/social-interest/ml/nn_mse.png" class="chart image" />
 
-An interesting thing can also be seen here, where the standard deviation of the output first falls to close to zero, as the neural network learns to approximate the mean of the training set, before slowly rising and it learns structure from the image features.
+An interesting evolution can also be observed here: the standard deviation of the output first falls to close to zero, as the neural network learns to approximate the mean of the training set, before slowly rising and it learns structure from the image features.
 
 <img src="/images/fulls/social-interest/ml/nn_std.png" class="chart image" />
 
-The training was terminated after about 14,000 steps for early stopping criteria, and performance was tested on the validation set to achieve a performance of 55.9%. This isn't great, but it's better than random chance!
+The training was terminated early after about 14,000 steps as the validation error began to rise.
 
 <img src="/images/fulls/social-interest/ml/nn_performance.png" class="chart image" />
 
 <img src="/images/fulls/social-interest/ml/nn_user_performance.png" class="chart image" />
 
-While the neural network approach was not ultimately the most succesful algorithm for predicting social interest in this experiment, it has the most promise for future development. By retraining the entirety of a classification network, and incorporating other networks, such as those trained for visual aesthetics[^lu1] or even pornography[^yahoo], the performance of the neural network model could exceed the performance of boosted trees significantly. Even with these same features, due to the vast number of hyperparameters to adjust, the neural network performance could certainly be improved. However, this task will have to wait for additional time availability and access to more sophisticated computation hardware.
+The trained model, tested on the validation set, had a root-mean-square error of 0.462. Is this good? It turns out that this is only tangentially related to what we actually want to measure -- relative differences between images on a per-user basis.  
+
+#### A better error estimate
+
+Instead of RMSE, we can instead estimate the effectiveness of our model by calculating the percentage of comparisons between images taken by the same user that it ranks correctly. If a user has 50 images, there are 50*49/2 = 1225 possible comparisons between images. We can expect to get 50% of the wrong if we are randomly guessing. If we got 100% of them correct, then we could establish the correct rank order of images.
+
+With this metric, the neural network model achieves a performance of 55.9%. This isn’t great, but it’s (slightly) better than random chance!
+
+While the neural network approach was not ultimately the most successful algorithm for predicting social interest in this experiment, it has the most promise for future development. By retraining the entirety of a classification network, and incorporating other networks, such as those trained for visual aesthetics[^lu1] or even pornography[^yahoo], the performance of the neural network model could exceed the performance of boosted trees significantly. Even with these same features, due to the vast number of hyperparameters to adjust, the neural network performance could certainly be improved. However, this task will have to wait for additional time availability and access to more sophisticated computation hardware.
 
 ### Transfer learning with other ML algorithms
 
-We can use the 2048 values of the Inception network final pooling layer, along with summary statistics from the face detection exploration, as dataset features directly with many common machine learning algorithms. The two that I will explore here are support vector machines and boosted decision trees.
+We can use the 2048 values of the Inception network final pooling layer, along with summary statistics from the face detection exploration, as dataset features directly with many common machine learning algorithms. The two that we will explore further here are support vector machines and boosted decision trees.
 
 #### Support vector machines
 
-The first approach we can throw at this prediction problem is a support vector machine, a well understood machine learning technique that has many nice properties. How can we evaluate correctness of our prediction? The mathematically-nicest way to do this is to use the mean-square-error (or root-mean-square-error) as an error signal, and attempt to minimize that, as was done for the neural network above. However, this is not perfectly equivalent to what we want to do, as we are more interested in relative differences between images on a per-user basis.
-
-##### A better error estimate
-
-Instead, we can estimate the effectiveness of our model by calculating the percentage of comparisons between images in the same user that it predicts correctly. If a user has 50 images, there are 50*49/2 = 1225 possible comparisons between images. We can expect to get 50% of the wrong if we are randomly guessing. If we got 100% of them correct, then we could establish the correct rank order of images.
+The first approach we can throw at this prediction problem is a support vector machine, a fairly well understood and extremely flexible machine learning algorithm. What will our loss-function be for evaluating the correctness of our prediction? The mathematically-nicest way to do this is to use the mean-square-error (or root-mean-square-error) as an error signal, and attempt to minimize that, as was used for the neural network. However, for validating performance, we will continue to use the comparison-correctness metric described above.
 
 After performing a grid search establish the best SVM parameters, the best we can do is predict comparisons with 55.9% accuracy. (Trained with 1/10 the data in order to speed comparisons of methods by 100-1000x.) This is basically the same accuracy as the neural network achieved.
 
 ##### Using user data
 
-Perhaps the result can be improved if data about the user responsible for each image was included in the training step. Then, predictions involving image features alone, and not information about the user, could be considered to be true predictions of social interest based on image content. Of course, it won't work out this cleanly due to the rbf kernel involving many combinations of predictors, some of which will be both image features and user features.
+Perhaps the result can be improved if data about the user responsible for each image was included in the training step. Then, predictions involving image features alone, and not information about the user, could be considered to be true predictions of social interest based on image content. During performance testing, the validation set images have the user information zeroed out -- the image features alone are provided to the SVM.
 
-During testing, the test images have the user information zeroed out -- just the image features alone are provided to the SVM.
-
-After performing a second grid search, the best we can do is 56.4% -- a modest but significant improvement over training without use of user info. However, this is still trained with 1/10 of the data. Training with the complete dataset improves this result slightly to 56.5%, though it significantly increases the computational time.
+After performing a second grid search, the best performance achieved is 56.4% accuracy -- a modest but significant improvement over training without use of user info. However, this is still trained with 1/10 of the data. Training with the complete dataset improves this result slightly to 56.5%, though it significantly increases the computational time.
 
 <img src="/images/fulls/social-interest/ml/svm_performance.png" class="chart image">
 
-Note that when the validation data is scatter plotted, the correlation between predicted and actual likes is non-existent. The r<sup>2</sup> value is just 0.017. This is expected as each "user cluster" of images is shifted more-or-less randomly, though they should be internally consistent.
+Note that when the validation data is scatter plotted, the correlation between predicted and actual likes is non-existent. The $$r^2$$ value is just 0.017. This is expected as each "user cluster" of images is shifted more-or-less randomly, though they should be internally consistent.
 
 <img src="/images/fulls/social-interest/ml/svm_user_performance.png" class="chart image">
 
-Well, somewhat internally consistent. It's not great, or even clear that it is working at all. Some of these look worse than random guessing. Let's try a few other methods of approaching this problem.
+Well, somewhat internally consistent. It's not evident from this scatter plot that the model is working at all, and the negative coefficients on some users indicate worse performance than random guessing. Let's try a few final methods of approaching this problem.
 
 #### Boosted decision trees
 
-Boosted decision trees work much better for this problem, due to the high dimensionality of the input data. Fairly easily, we are able to obtain a 56.9% accuracy, better than achieved with the SVM, without even taking into account user information. Additionally, this is substantially faster than an SVM.
+[Gradient boosted](https://en.wikipedia.org/wiki/Gradient_boosting) decision trees work much better for this problem, due to the high dimensionality of the input data. Fairly easily, we are able to obtain a 56.9% accuracy, better than achieved with the SVM, without even attempting taking into account user information. Additionally, this is substantially faster than an SVM.
 
 <img src="/images/fulls/social-interest/ml/boosted_scatter.png" class="chart image">
 
 ##### Simultaneous estimation of user-dependent effect
 
-How can we modify the decision tree to incorporate user information and achieve a better result? Since a boosted decision tree is a general additive model, one possibility is to use the one-hot user data as a training feature directly. However, this has its downsides -- we don't want a non-stump decision tree to use both user and image information. If we restrict the max-depth of each tree to 1, making every tree a stump, then this is not an issue, but performance is degraded.
+How can we modify the decision tree to incorporate user information and achieve a better result? Since a boosted decision tree is a general additive model, one possibility is to use the one-hot user data as a training feature directly. However, this has its complications -- we don't want a non-stump decision tree to use both user and image information. If we restrict the max-depth of each tree to 1, making every tree a stump, then this is not an issue, but performance is degraded. To avoid writing a custom gradient boosting implementation, we will not attempt this method.
 
-Another possibility is to simultaneously estimate a per-user additive factor as we fit additional trees to the data. My first attempt at doing this involves alternately fitting 10 trees to the data, calculating the per-user mean error, and subtracting 20% of this per-user mean error from the log-like training value. Using this method, the accuracy increases to 57.1%, which is a fairly minor improvement.
+Another possibility is to simultaneously estimate a per-user additive factor as additional trees are fit to the data. The first attempt at doing this involved alternately fitting 10 trees to the data, calculating the per-user mean error, and subtracting 20% of this per-user mean error from the log-like training value. Using this method, the accuracy increases to 57.1%, which is a fairly minor improvement.
 
-The second method of estimating the per user additive factor I tried was as follows: apply gradient boosting to fit trees until reaching an early stopping criterion, calculate the per-user mean error on the training data, subtract that from the training log-likes, start over, and repeat. In this iterative way, the per user additive factor can be estimated. This process produces a 58.0% accuracy -- comparitavely quite good! -- although the training time is very long, as it must fit a boosted gradient tree model several times over.
+The second method attempted for the estimating the per user additive factor was the following: apply gradient boosting to fit trees until reaching an early stopping criterion, calculate the per-user mean error on the training data, subtract that from the training log-likes, start over, and repeat. In this iterative way, the per user additive factor can be estimated. This process produces a 58.0% accuracy – comparatively quite good! -- although the training time is very long, as it must fit a gradient boosted tree model several times over.
 
-Essentially, we have taken the standard gradient boosting algorithm and wrapped it in a gradient descent on the per-user mean. This first implementation subtracted the entire user mean on each step -- a very naive form of gradient descent that attempts to finish everything in one jump. By decreasing this learning rate, a slightly better 58.1% accuracy can be achieved.
+Essentially, we have taken the standard gradient boosting algorithm and wrapped it in an optimization of the per-user mean. This first implementation subtracted the entire user mean on each step -- a very naive optimization that attempts to jump immediately to the correct answer. By decreasing this learning rate, a slightly better 58.1% accuracy can be achieved.
 
 <img src="/images/fulls/social-interest/ml/boosted_w_user.png" class="chart image">
 
@@ -415,13 +415,13 @@ This model is the model that will be used going forwards.
 
 ## Results
 
-Evaluated on a hold-out test dataset, (unique from the training and validation datasets used previously) only 54.7% of comparisons were correctly evaluated. This implies that there may have been some overfitting of the validation dataset during the hyperparameter search. Alternatively, perhaps the test and validation datasets are too small, increasing the variance of this performance metric.
+Evaluated on a hold-out test dataset, (unique from the training and validation datasets used previously) only 54.7% of comparisons were correctly evaluated. This implies that there may have been some overfitting of the validation dataset during the hyperparameter/algorithm search. Alternatively, perhaps the test and validation datasets are too small, increasing the variance of this performance metric.
 
 ### On a non-Facebook dataset
 
-Another way of evaluating the performance of these methods is by subjectively evaluating the performance on an unscored, non-Facebook dataset. In this case, I am using a donated set of photos from a friend of mine. As this is also the final application of the model, it is the truest evaluation of its usefulness.
+A second way of evaluating the performance of these methods is by subjectively evaluating the performance on an unscored, non-Facebook dataset. In this case, we will be using a set of personal smartphone photos donated by a third party. As this is also the final application the model is being built for, it is the truest evaluation of its final usefulness.
 
-We will look at the evaluated rankings of the set of photos taken on a particular date, and subjectively evaluate its accuracy. We will be using the gradient boosted tree model created with simultaneous estimation of the per-user additive parameters.
+We will look at the evaluated rankings of the set of photos taken on a particular date, and subjectively evaluate its performance. We will be using the gradient boosted tree model created with simultaneous estimation of the per-user additive parameters.
 
 In each case, a wide range of predicted values were observed. Let's look at the top 5 and bottom 5 images for each day, excluding [near duplicates](http://exclav.es/2016/07/04/near-duplicate-detection-wavelets/). 
 
@@ -477,9 +477,9 @@ In each case, a wide range of predicted values were observed. Let's look at the 
 	</div>
 </div>
 
-In this first example day, we see characteristically mixed results. The most likely image to be of social interest is, indeed a great image from that day. The third image, a close variant of the first (but not a near duplicate) is another "hit." However, as the content of these two images is very similar, it would be expected that they produce similar scores, which they do not. This indicates a need for improvement -- perhaps inflating the training dataset size with crops and rotations of the original images would be a model more robust to these minor variations. The other two images are both okay, and the fifth should not have been ranked nearly as highly as it was.
+In this first example day, we see characteristically mixed results. The most likely image to be of social interest is, indeed a great image from that day. The third image, a close variant of the first (but not a near duplicate) is another "hit." However, as the content of these two images is very similar, it would be expected that they produce similar scores, which they do not. This indicates a need for improvement -- perhaps increasing the size the training dataset size with crops and rotations of the original images would build a model more robust to these minor variations. The other two images are both okay, and the fifth should not have been ranked nearly as highly as it was.
 
-Of the bottom 5 images, two (the fourth and fifth) show a scene that I think would hold social interest -- hiking and setting up camp.
+Of the bottom 5 images, two (the fourth and fifth) show a scene that should (in my subjective opinion) hold social interest -- hiking and setting up camp.
 
 <img src="/images/fulls/social-interest/evaluation/image_rank_day_1.png" class="chart image" />
 
@@ -533,7 +533,7 @@ Of the bottom 5 images, two (the fourth and fifth) show a scene that I think wou
 	</div>
 </div>
 
-The model performs significantly better on this day, finding several great images of people, groups, and objects of interest on a day with nearly one hundred images. Of the bottom performing images, I personally find several of them nice, but we do know from previous investigation that landscapes tend to perform poorly. The fifth worst image likely should have been ranked higher, as it is of bees, a somewhat unusual subject.
+The model performs significantly better on this day, finding several great images of people, groups, and objects of interest on a day with nearly one hundred images. Of the bottom performing images, I personally find several of them nice, but we do know from previous investigation that landscapes tend to perform poorly. The fifth worst image likely should have been ranked higher, as it is of a somewhat unusual subject, bees!
 
 <img src="/images/fulls/social-interest/evaluation/image_rank_day_3.png" class="chart image" />
 
@@ -587,9 +587,11 @@ The model performs significantly better on this day, finding several great image
 	</div>
 </div>
 
-The top four images are all great picks for this day. Number five is somewhat iffy, but it could make sense in a narrative for setting a sense of place. The bottom four are all fairly missable photos. (The landscape with the clouds is a very blurry photo, a sharper version of it was rated higher.) The photo of the shadow, ranked fifth worst, is actually quite nice.
+The top four images are all great picks for this day. Number five is somewhat iffy, but it could make sense in a narrative for setting a sense of place. The bottom four are all fairly missable photos. (The landscape with the clouds is a very blurry photo, a sharper version of it was rated higher.) The photo of the shadow, ranked fifth worst is somewhat interesting, however.
 
-These three days worth of photos provide a typical cross-section into how the model performs currently. Overall, it is not great, though it is sometimes able to identify certain images that are likely to be socially interesting. There are significant issues that would be present in attempting to use this model for highlighting important images in a user interface. In order to be understandable and intuitive to the user, a less opaque model, such as one that simply highlighted images with people in them, would be much more usable.
+These three days worth of photos provide a typical cross-section into how the model performs currently. Overall, it is not great, though it is sometimes able to identify certain images that are likely to be socially interesting. There are significant issues that would be present in attempting to use this model for highlighting important images in a user interface.
+
+In order to be understandable and intuitive to the user, a less opaque model, such as one that simply highlighted images with people in them, would be significantly more usable.
 
 ## Next steps
 
@@ -601,29 +603,29 @@ In the introduction, I discussed how I thought that this would be a difficult, u
 
 ### Different predictive features
 
-Maybe image semantic analysis features really aren't the most predictive. What about the hidden layers of a network trained on AVA[^ava], or a face-detection network? (Schaar cascades were used for the face data above.) After all, aesthetic parameters such as image sharpness, saturation, and composition, and deeper face attributes such as emotion certainly affect social interest.
+Maybe image semantic analysis features really aren't the most predictive. What about the hidden layers of a network trained on AVA[^ava], or a face-detection network? (Haar cascades were used for the face data above.) After all, aesthetic parameters such as image sharpness, saturation, and composition, and deeper face attributes such as emotion certainly affect social interest.
 
 ### Using more training data
 
-Since beginning this project, I have obtained an additional 300,000 Facebook images that could be used to extend the training dataset. However, these are from a slightly different source (photo album pages, rather than wall pages), which could create additional noise in the training dataset. A better solution for extending the dataset would be by scraping the wall pages of users that I am not friends with, reducing the "social bias" of the data.
+Since beginning this project, I have obtained an additional 300,000 Facebook images that could be used to extend the training dataset. However, these are from a slightly different source, (photo album pages, rather than wall pages) which could add additional noise to the training dataset. A better solution for extending the dataset would be by scraping the wall pages of users that I am not friends with, reducing the "social bias" of the data.
 
 ### Training a neural network
 
-As mentioned above, one direction that I did not investigate is the complete training of a neural network from scratch. This was for two reasons -- a lack of computing hardware, and a lack of data. However, this problem may be more tractable for me in the near future. One method that I am particularly interested in exploring here is weight sharing between networks designed to predict different things -- for example, could an network that simultaneously predicts semantic content, aesthetic quality, and social interest share many of the first few convolutional layers. My suspicion is that it could.
+As mentioned above, one direction that I did not investigate is the complete training of a neural network from scratch. This was for two reasons -- a lack of computing hardware, and a lack of data. However, this problem may be more tractable for me in the near future. One method that I am particularly interested in exploring here is weight sharing between networks designed to predict different things -- for example, could a network that simultaneously predicts semantic content, aesthetic quality, and social interest share many of the first few convolutional layers? My suspicion is that it could.
 
 ## Conclusions
 
 > Aim low. Aim so low no one will even care if you succeed. -- Marge Simpson
 
-Expectations for success were intially minimal, and those expectations have been mostly met. Weak correlations have been found with expected image properties, including the presence of faces and the classified category of the image. The best trained classifier has a slightly better than chance likelihood of correctly classifying images according to social interest. Subjective evalution of the results on a dataset from a completely different source return similar results -- slightly better than randomly selecting images. Still, it is definitely better, and that's something.
+Expectations for success were initially minimal, and those expectations have been mostly met. Weak correlations have been found with expected image properties, including the presence of faces and the classified category of the image. The best trained classifier has a slightly better than chance likelihood of correctly classifying images according to social interest. Subjective evaluation of the results on a dataset from a completely different source demonstrates similar results -- slightly more interesting selections than randomly chosen images. However, because the model is relatively opaque and occasionally inconsistent in its decision making, a simpler and more easily understood method of highlighting images of social interest may perform better in real interfaces. Significant opportunities remain for further investigation.
 
 ## Appendix
 
-Source code for this exploration, in the form of Jupyter notebooks, are available [here](https://github.com/vignettist/social-interest). All code is licensed under the MIT License.
+Jupyter notebooks containing source code for this exploration are available [here](https://github.com/vignettist/social-interest). All code is licensed under the MIT License.
 
 Unfortunately, I cannot release the Facebook image dataset due to privacy concerns.
 
-Text is Copyright 2016, Logan Williams. All images are owned by the originalc creators.
+Text is Copyright 2016, Logan Williams. All images are owned by their original creators.
 
 ## Citations
 
