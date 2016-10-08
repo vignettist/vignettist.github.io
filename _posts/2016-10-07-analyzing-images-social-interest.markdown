@@ -619,6 +619,10 @@ As mentioned above, one direction that I did not investigate is the complete tra
 
 Expectations for success were initially minimal, and those expectations have been mostly met. Weak correlations have been found with expected image properties, including the presence of faces and the classified category of the image. The best trained classifier has a slightly better than chance likelihood of correctly classifying images according to social interest. Subjective evaluation of the results on a dataset from a completely different source demonstrates similar results -- slightly more interesting selections than randomly chosen images. However, because the model is relatively opaque and occasionally inconsistent in its decision making, a simpler and more easily understood method of highlighting images of social interest may perform better in real interfaces. Significant opportunities remain for further investigation.
 
+## Comments
+
+Suggestions for future explorations, corrections, inaccuracies, and general hate mail may be directed to [logan.williams@alum.mit.edu](mailto:logan.williams@alum.mit.edu).
+
 ## Appendix
 
 Jupyter notebooks containing source code for this exploration are available [here](https://github.com/vignettist/social-interest). All code is licensed under the MIT License.
