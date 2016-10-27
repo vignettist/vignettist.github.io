@@ -9,15 +9,15 @@ title: Analyzing photos for "social interest"
 
 ## What makes a photo interesting?
 
-Interesting photos can remind us of a person or a place or a time, connect us to events distant from where we are now, inform us about the world, and make us want to learn more. What is it that makes a photo interesting? Can we, through analysis of an image alone, determine whether it will be interesting?
+Interesting photos can remind us of a person or a place or a time, connect us to events distant from where we are now, inform us about the world, and make us want to learn more. What is it that makes a photo interesting?
 
-Other approaches, such as Facebook's news feed and Flickr's interestingness algorithm, measure interest from user interactions with the image: views, favorites, and comments. [^flickr] How could we tell that an image might be interesting *before* anyone has seen it?
+Some approaches to this question, such as Facebook's news feed and Flickr's interestingness algorithm, measure interest from user interactions with the image: views, favorites, and comments. [^flickr] How could we tell that an image might be interesting *before* anyone has seen it? Can we, through analysis of an image alone, determine whether it will be interesting?
 
-Recent research pushes in convolutional neural networks have produced promising results, showing the feasibility of analyzing images for subjective style, [^karayev] aesthetic quality, [^lu1] or both. [^lu2] However, aesthetic quality as measured by Flickr or DPChallenge users is not exactly what [Vignette](http://vignette.cool) is interested in. We want to know what images will have "*social interest*."
+Recent research pushes in convolutional neural networks have produced promising results with images, proving the feasibility of analyzing images for subjective style, [^karayev] aesthetic quality, [^lu1] or both. [^lu2] However, aesthetic quality as measured by Flickr or DPChallenge users is not exactly what [Vignette](http://vignette.cool) is interested in. We want to know what images will have "*social interest*."
 
-Computers do not do well with subjectivity, and it is difficult to image a more subjective, challenging problem than this. Different people can find the same image either interesting or uninteresting, depending on whether they know the people photographed or have familiarity with the location. Some people like portraits, some people like landscapes. Some people care if an image is blurry, some people are just happy to see a photo of their niece. This definition of "social interest" will change not only from person to person but also in the same person over time. It is an intensely subjective, vague, personal, and unstable question to try to answer, and computers almost certainly will not succeed.
+Computers do not handle subjectivity well, and it is difficult to image a more subjective, challenging problem than this. Different people can find the same image either interesting or uninteresting, depending on whether they know the people photographed or have familiarity with the location. Some people like portraits, some people like landscapes. Some people care if an image is blurry, some people are just happy to see a photo of their niece. This definition of "social interest" will change not only from person to person but also in the same person over time. It is an intensely subjective, vague, personal, and unstable question to try to answer, and computers almost certainly will not succeed.
 
-But perhaps, there exist some commonalities of interest, some characteristics within an image that can provide a hint that a photo will be interesting, a suggestion rather than a declaration.
+But perhaps, there exists some commonality of interest, some set of characteristics within an image that can provide a hint that a photo will be interesting, an implication rather than a declaration.
 
 ## Building a dataset
 
