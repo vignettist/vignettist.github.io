@@ -2561,6 +2561,7 @@
 		list-style: none;
 		margin: 1em 0 0 0;
 		padding: 0;
+		width: 300px;
 	}
 
 		#footer .copyright li {
