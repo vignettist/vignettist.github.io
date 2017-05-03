@@ -39,7 +39,7 @@ The final and most technically interesting part of the importing process is aski
 
 *Google’s Inception library did a great job of identifying restaurants, but lumped a few strange images under ‘stage’.*
 
-The "[hidden layers](https://www.edge.org/response-detail/10351)" of these classification networks also contain information that may be useful for evaluating other properties of the photograph. I’ve been experimenting with generating measures of “interestingness” using these hidden layers since before I joined the Open Lab. [The results of my earlier experimentation suggest that while my method isn’t perfect, the interestingness factor is worth evaluating.](http://vignette.cool/blog/#results)
+The "[hidden layers](https://www.edge.org/response-detail/10351)" of these classification networks also contain information that may be useful for evaluating other properties of the photograph. I’ve been experimenting with generating measures of “interestingness” using these hidden layers since before I joined the Open Lab. [The results of my earlier experimentation suggest that while my method isn’t perfect, the interestingness factor is worth evaluating.](http://vignette.cool/2016/10/07/analyzing-images-social-interest.html#results)
 
 <img src="/images/tools/interesting.png" />
 
