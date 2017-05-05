@@ -24,17 +24,17 @@ My research goals, which span computer vision to psychology, and will require ti
 ### Citations
 
 [^1]: Labov, W. & Waletzky, J. (1966). Narrative Analysis: Oral Narratives of Personal Experience. In J. Helm (Ed.), Essays on the Verbal and Visual Arts: Proceedings of the 1966 Annual Spring Meeting of the American Ethnological Society (pp. 12-44). Seattle, Washington: University of Washington Press.
-[^2] McAdams, D. (2008). Personal Narratives and the Life Story. In O. Johns, R. Robins & L. Pervin (Eds.), Handbook of Personality, Theory and Research (pp. 242-262). New York, New York: Guilford Press.
-[^3] Baerger, D. and McAdams, D. (1999). Life Story Coherence and its Relation to Psychological Well- Being. Narrative Inquiry, 9(1). doi:10.1075/ni.9.1.05bae
-[^4] Laibowitz, M. (2010). Creating cohesive video with the narrative-informed use of ubiquitous wearable and imaging sensor networks (Doctoral thesis). Retrieved from DSpace@MIT, http://hdl.handle.net/ 1721.1/57695
-[^5] Lu., X, et. al. (2014). RAPID: Rating Image Aesthetics using Deep Learning. In Proceedings of the 22nd ACM International Conference on Multimedia (pp 457-466). New York, New York: ACM.
-[^6] Karayev, S., et. al. (2014). Recognizing Image Style. In M. Valstar et. al. (Eds.), Proceedings of the British Machine Vision Conference 2014. doi:10.5244/C.28.122
-[^7] Weizenbaum, J. (1966). ELIZA — A Computer Program for the Study of Natural Language Communication Between Man and Machine. Compuational Linguistics, 9(1). pp. 36-45.
-[^8] Kross, E. (2013). Facebook use predicts declines in subjective well-being in young adults. PLoS One, 8(8). doi:10.1371/journal.pone.0069841
-[^9] Denti, L., et. al. (2012). Sweden’s Largest Facebook Study. Gothenburg Research Institute. Gothenburg, Sweden: University of Gothenburg.
-[^10] Rosen, L., et. al. (2014) Is Facebook creating “iDisorders”? The link between clinical symptoms of psychiatric disorders and technology use, attitudes and anxiety. Computers in Human Behavior 29(3). pp. 1243-1254.
-[^11] Wenninger, H. et. al. (2014). Activity matters: Investigating the influence of Facebook on life satisfaction of teenage users. In Proceedings of the 22nd European Conference on Information Systems.
-[^12] Reinecke, L. & Trepte S.(2014). Authenticity and well-being on social network sites: A two-wave longitudinal study on the effects of online authenticity and the positivity bias in SNS communication. Computers in Human Behavior, 30. pp 95-102.
-[^13] Kim, J., Chung, N., & Ahn, K. (2014). Why people use social networking services in Korea: The mediating role of self-disclosure on subjective well-being. Information Development 30(3). pp. 276-287.
-[^14] Krasnova, H., et. al. (2015). Why Following Friends Can Hurt You: An Exploratory Investigation of the Effects of Envy on Social Networking Sites among College-Age Users. Information Systems Research, 26(3). doi:10.1287/isre.2015.0588
-[^15] Sontag, S. (1977). On Photography. New York, New York: Picador.
+[^2]: McAdams, D. (2008). Personal Narratives and the Life Story. In O. Johns, R. Robins & L. Pervin (Eds.), Handbook of Personality, Theory and Research (pp. 242-262). New York, New York: Guilford Press.
+[^3]: Baerger, D. and McAdams, D. (1999). Life Story Coherence and its Relation to Psychological Well- Being. Narrative Inquiry, 9(1). doi:10.1075/ni.9.1.05bae
+[^4]: Laibowitz, M. (2010). Creating cohesive video with the narrative-informed use of ubiquitous wearable and imaging sensor networks (Doctoral thesis). Retrieved from DSpace@MIT, http://hdl.handle.net/ 1721.1/57695
+[^5]: Lu., X, et. al. (2014). RAPID: Rating Image Aesthetics using Deep Learning. In Proceedings of the 22nd ACM International Conference on Multimedia (pp 457-466). New York, New York: ACM.
+[^6]: Karayev, S., et. al. (2014). Recognizing Image Style. In M. Valstar et. al. (Eds.), Proceedings of the British Machine Vision Conference 2014. doi:10.5244/C.28.122
+[^7]: Weizenbaum, J. (1966). ELIZA — A Computer Program for the Study of Natural Language Communication Between Man and Machine. Compuational Linguistics, 9(1). pp. 36-45.
+[^8]: Kross, E. (2013). Facebook use predicts declines in subjective well-being in young adults. PLoS One, 8(8). doi:10.1371/journal.pone.0069841
+[^9]: Denti, L., et. al. (2012). Sweden’s Largest Facebook Study. Gothenburg Research Institute. Gothenburg, Sweden: University of Gothenburg.
+[^10]: Rosen, L., et. al. (2014) Is Facebook creating “iDisorders”? The link between clinical symptoms of psychiatric disorders and technology use, attitudes and anxiety. Computers in Human Behavior 29(3). pp. 1243-1254.
+[^11]: Wenninger, H. et. al. (2014). Activity matters: Investigating the influence of Facebook on life satisfaction of teenage users. In Proceedings of the 22nd European Conference on Information Systems.
+[^12]: Reinecke, L. & Trepte S.(2014). Authenticity and well-being on social network sites: A two-wave longitudinal study on the effects of online authenticity and the positivity bias in SNS communication. Computers in Human Behavior, 30. pp 95-102.
+[^13]: Kim, J., Chung, N., & Ahn, K. (2014). Why people use social networking services in Korea: The mediating role of self-disclosure on subjective well-being. Information Development 30(3). pp. 276-287.
+[^14]: Krasnova, H., et. al. (2015). Why Following Friends Can Hurt You: An Exploratory Investigation of the Effects of Envy on Social Networking Sites among College-Age Users. Information Systems Research, 26(3). doi:10.1287/isre.2015.0588
+[^15]: Sontag, S. (1977). On Photography. New York, New York: Picador.
