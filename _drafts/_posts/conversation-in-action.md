@@ -69,7 +69,7 @@ I am excited about continuing to experiment with the conversational engine. Inte
 
 Geography is an extremely important, especially for longer (year-scale) self-narrative arcs. There are many opportunities to better integrate place into Vignette. For example, the clustering interface could expose the places visited in each cluster, and a “cluster map” view could allow for exploration of geographic trends.
 
-<video width="746" height="650" controls>
+<video width="746" height="493" controls>
 <source src="/uploads/2017/06/05/overview.mp4" type="video/mp4">
 </video>
 
