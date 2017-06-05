@@ -23,8 +23,8 @@ Some states in the state machine have multiple possible outputs. Decisions on wh
 
 The FSM transitions from one state to another either automatically or after the user has provided a new input. With every transition, it presents a new statement or question to the user. Some of these statements are entirely pre-defined, for example “Show me another photo you think is interesting,” which is visible on the state diagram above. Other outputs will try to use information from earlier in the conversation to produce a more intelligent response, either by having some notion of the current topic of conversation (a person or a place), or by picking out a piece of the previous response. This is used currently to ask the user to elaborate on an earlier answer.
 
-<video>
-<source>/uploads/2017/06/05/ww_story.mp4
+<video width=746 height=650 controls>
+<source src="/uploads/2017/06/05/ww_story.mp4" type="video/mp4" />
 </video>
 
 Clearly, this conversation engine has a very poor level of understanding of the content of the conversation. It is easy to imagine that more sophisticated natural language processing and a contextual understanding database might enable better questions and a greater level of human response.
@@ -51,7 +51,8 @@ The story skeleton begins by choosing images to insert. Approximately one image 
 
 At this stage, a simple composition interface is presented to the user, with the ability to add text and headings, choose images from the event, and add maps to help illuminate geographic context. At each edit, addition, or deletion, the state of the story is updated in a MongoDB collection.
 
-<video><source>/uploads/2017/06/05/ww_editor.mp4</source></video>
+<video width=746 height=650 controls><source src="/uploads/2017/06/05/ww_editor.mp4" type="video/mp4" />
+</video>
 
 The interface is designed to be as straightforward and non-distracting as possible. To this end, sophisticated formatting options are not provided, neither is the ability to upload images not already associated with the cluster or even to choose images in Vignette from a different cluster.
 
@@ -67,7 +68,9 @@ I am excited about continuing to experiment with the conversational engine. Inte
 
 Geography is an extremely important, especially for longer (year-scale) self-narrative arcs. There are many opportunities to better integrate place into Vignette. For example, the clustering interface could expose the places visited in each cluster, and a “cluster map” view could allow for exploration of geographic trends.
 
-<video><source>/uploads/2017/06/05/overview.mp4</source></video>
+<video width=746 height=650>
+<source src="/uploads/2017/06/05/overview.mp4" type="video/mp4" />
+</video>
 
 There are also some less critical, self contained additions to Vignette that could be interesting projects. It would be pretty fun to create different renderers for the final narrative content -- to a static webpage, to a PDF, to a pamphlet/book format, etc. Are there unconventional formats that this would work well with?
 
