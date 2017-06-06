@@ -1,7 +1,7 @@
 ---
 title: Lessons from narratology
 layout: post
-date: '2017-06-06T11:40:17+00:00'
+date: '2017-02-08'
 ---
 As I explore and develop Vignette, my photo narrative project, I have also been reading about theories of narrative structure. Narratives are vital to human understanding. Narratives describe a connection between a series of events by convincing a reader of a progression or cause. Without the ability to construct a narrative, there would be no stories, only unrelated events. [1] Research in cognition shows that narrative is strongly linked to memory, and that understanding of many complex relationships takes the form of narrative. [2] Modern narratology is heavily influenced by cognitive models and “considers narrative to be the conscious and unconscious mental framework that supports and directs human thinking.” [3] Furthermore, narrative creation is understood to be a critical part of personality building and self-definition. [10] Constructing coherent life-narratives is strongly associated with greater life satisfaction and reduced risk of depression, [7] and assistance with narrative is now a common psychotherapeutic approach.
 
