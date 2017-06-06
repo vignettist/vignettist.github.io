@@ -21,18 +21,17 @@ Many literary theorists have tried to categorize narratives. The simple trichoto
 
 In the 1970s, many researchers started trying to discover story schemas or plot grammars. Like the grammar of language itself, a story grammar consists of abstract objects that can be combined with each other in different ways to define the syntactic structure of a narrative. An influential author in this field was David E. Rumelhart, who in his 1975 paper Notes on a Schema for Stories, defined a straightforward example of a story grammar. He proposed 11 rules that could be combined in various ways, beginning with the most fundamental: STORY = SETTING + EPISODE. Each of these terms was defined further, for example, a SETTING is any number of STATES, and an EPISODE is an EVENT + REACTION. [4]
 
-<span style="background-color: transparent; font-size: 1rem;">Two years later, another researcher, Peter Thorndyke, proposed another story grammar that was very similar in theme. His 10 simple rules are reproduced below.</span>
+Two years later, another researcher, Peter Thorndyke, proposed another story grammar that was very similar in theme. His 10 simple rules are reproduced below.
 
 ![](/uploads/2017/06/06/Screen%20Shot%202017-06-06%20at%2011.42.44%20AM.png)
 
-*<span style="font-size: 1rem;">Thorndyke's grammar defines each element of a narrative in terms of a composition of other elements. An asterisk indicates that the element can be repeated, for example, a plot may be made of multiple episodes. [5]</span>
-*
+*Thorndyke's grammar defines each element of a narrative in terms of a composition of other elements. An asterisk indicates that the element can be repeated, for example, a plot may be made of multiple episodes. [5]*
 
 With grammars like these, researchers attempted to lay out the elements of a narrative in terms of its basic components. Even a simple story, such as the one below, used by Thorndyke in his research, could become bewilderingly complex.
 
 ![](/uploads/2017/06/06/Screen%20Shot%202017-06-06%20at%2011.42.32%20AM.png)
 
-<span style="font-size: 1rem;"><i>Using his grammar, Thorndyke decomposed a simple story into its atomic narrative components. [5]</i></span>
+*Using his grammar, Thorndyke decomposed a simple story into its atomic narrative components. [5]*
 
 While decomposition of narratives into elaborate structural trees is of limited applicability to Vignette, or indeed, any real world project, what Thorndyke used this structure for was quite interesting — he systematically varied the narrative by removing or rearranging structural components, and measured the ability of study participants to comprehend and recall each variant. What he found makes intuitive common sense: facts and events that were more important to the narrative (higher in the hierarchy) were easier to recall; repeating structure in subplots improved recall; and removing or de-emphasizing higher order themes reduced comprehensibility and recall. If the story was presented as a series of descriptive facts, i.e., events presented without the benefit of narrative connection, recall and comprehensibility dropped by 50%. The story grammar as presented can be seen as defining a kind of narrative coherence. [5] These results have been reproduced by other researchers [6], and while the decomposition of a story into a strictly structuralist grammar has fallen out of fashion in modern literary criticism, or at least is understood as a fundamentally limited method of analysis, conclusions about coherence and understanding remain relevant.
 
