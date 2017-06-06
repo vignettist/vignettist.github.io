@@ -3,6 +3,8 @@ title: Conversation in action
 layout: post
 date: '2017-06-05T13:12:55+00:00'
 ---
+
+
 [Previously](http://vignette.cool/2017/01/25/tools-for-working-with-images.html), I discussed methods of clustering photos into geographically and temporally related groups, and some of the trade-offs involved in various clustering algorithms and parameters. Since then, I have arrived at a workable set of defaults, and created an interface that allows clusters to be merged and split. I have not yet built a tool for custom cluster editing, and the split tool does not allow the user to select a split point. Instead, it uses k-means clustering with k=2 to try to find the most logical point to split the cluster. This is a user interface issue more than a technical issue -- I am not yet sure how to integrate a more customizable cluster creation tool into the application.
 
 ![](/uploads/2017/06/05/cluster_merging-1.gif)
@@ -17,13 +19,13 @@ For the prototype Vignette app that I am creating to test these hypotheses, I de
 
 ![](/uploads/2017/06/05/Screen%20Shot%202017-05-03%20at%201.14.17%20PM.png)
 
-*A portion of the finite state machine that drives the conversational user interface in Vignette.*
+*A portion of the finite state machine that drives the conversational user interface in Vignette. Writing in a flowchart like this makes it easier to keep track of the different state transitions and the dialog that accompanies them.*
 
 Some states in the state machine have multiple possible outputs. Decisions on which output path to follow can be made randomly or by analysis of the the user’s input. Currently, this analysis is quite limited, and it primarily looks for the presence of affirmative or negative words to decide if the user is responding yes or no. If the user is responding with a long statement, the FSM may decide to skip a followup question and use that statement directly, however, this is based only on the length of the statement, not on the content.
 
 The FSM transitions from one state to another either automatically or after the user has provided a new input. With every transition, it presents a new statement or question to the user. Some of these statements are entirely pre-defined, for example “Show me another photo you think is interesting,” which is visible on the state diagram above. Other outputs will try to use information from earlier in the conversation to produce a more intelligent response, either by having some notion of the current topic of conversation (a person or a place), or by picking out a piece of the previous response. This is used currently to ask the user to elaborate on an earlier answer.
 
-<video width="746" height="650" controls>
+<video width="746" height="650" controls="">
 <source src="/uploads/2017/06/05/ww_story.mp4" type="video/mp4">
 </video>
 
@@ -39,7 +41,7 @@ For Vignette, conversation is not the goal. Instead, the conversational user int
 
 ![](/uploads/2017/06/05/Screen%20Shot%202017-06-01%20at%204.57.27%20PM-1.png)
 
-*At the conclusion of a conversation, Vignette prompts the user to transition to the composition mode.*
+*At the conclusion of a conversation, Vignette prompts the user to transition to the composition mode. A bug/limitation is visible in its ability to form grammatically proper sentences.*
 
 To avoid the difficulty of starting writing from a completely blank slate, Vignette uses the conversation it has had with the user to form a skeleton of a story.
 
@@ -47,11 +49,11 @@ The story skeleton begins by choosing images to insert. Approximately one image 
 
 ![](/uploads/2017/06/05/short_story_skeleton.png)
 
-*The auto-generated story skeleton.*
+*The auto-generated story skeleton. Note that both the question and the answer are included from each part of the conversation. *
 
 At this stage, a simple composition interface is presented to the user, with the ability to add text and headings, choose images from the event, and add maps to help illuminate geographic context. At each edit, addition, or deletion, the state of the story is updated in a MongoDB collection.
 
-<video width="746" height="650" controls>
+<video width="746" height="650" controls="">
 <source src="/uploads/2017/06/05/ww_editor.mp4" type="video/mp4">
 </video>
 
@@ -63,13 +65,13 @@ I also discovered that users also have different preferences about text coming b
 
 ### Next steps
 
-The application featured in these screenshots and videos is currently online (and, of course, open source) on GitHub. However, setting it up to use yourself is currently a complicated process. Vignette needs some substantial packaging and cleanup effort, and the photo import process needs to be better integrated into the overall application. (Currently, photos are imported by running a separate script.)
+The application featured in these screenshots and videos is currently online (and, of course, open source) on [GitHub](http://github.com/vignettist). However, setting it up to use yourself is currently a complicated process. Vignette needs some substantial packaging and cleanup effort, and the photo import process needs to be better integrated into the overall application. (Currently, photos are imported by running a separate script.)
 
 I am excited about continuing to experiment with the conversational engine. Interviewers will often leave silence in a conversation to encourage the interviewee to keep talking in order to fill in the silence. What if a chatbot did this too? What if the chat interface briefly showed a “message in progress” ellipsis, then this vanished? I think that this might provoke a clarifying response for the user, or an expansion of the current discussion. It could also help subtly indicate that the computer doesn’t feel very confident in what it is trying to ask or say -- another way to add AI humility. It could also be interesting to add text-to-speech and support spoken responses. Not only would this be a more comfortable input interface for storytelling on mobile devices, emotionally intimate stories might be better told with the nuance of human speech.
 
 Geography is an extremely important, especially for longer (year-scale) self-narrative arcs. There are many opportunities to better integrate place into Vignette. For example, the clustering interface could expose the places visited in each cluster, and a “cluster map” view could allow for exploration of geographic trends.
 
-<video width="746" height="493" controls>
+<video width="746" height="493" controls="">
 <source src="/uploads/2017/06/05/overview.mp4" type="video/mp4">
 </video>
 
