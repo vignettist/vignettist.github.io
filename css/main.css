@@ -2926,8 +2926,8 @@ img {
 
 			#footer .copyright li {
 				border-left-width: 0;
-				display: block;
-				line-height: 1.25em;
+				display: inline-block;
+				line-height: 1em;
 				margin-left: 0;
 				padding-left: 0;
 			}
