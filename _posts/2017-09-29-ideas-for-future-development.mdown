@@ -1,7 +1,7 @@
 ---
 title: Ideas for future development
 layout: post
-date: '2017-09-29T07:30:55-80:00'
+date: '2017-09-29T14:30:55-00:00'
 ---
 
 Here are some ideas for future development of Vignette. These have been floating around in my head and in my notebook for a while, and it was time that they got written down. Elaboration and blog posts on implementation of some of these features are to come.
