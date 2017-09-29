@@ -13,12 +13,12 @@ Here are some ideas for future development of Vignette. These have been floating
 * Use the spoken dialog to create better video slideshows, that involve the user telling their own story.
 * New output formats from the written story in Vignette, including low-cost printed pamphlets, video slideshows, interactive websites, and a "journal mode."
 * Suggesting stories within large photo archives by
-** Finding loops/journeys that end where they started after traveling a long distance
-** Finding the first time a person appears in a photo, or when someone appears after a long gap
-** Finding the first time a place appears in a photo, or when the user returns after a long gap
+    * Finding loops/journeys that end where they started after traveling a long distance
+    * Finding the first time a person appears in a photo, or when someone appears after a long gap
+    * Finding the first time a place appears in a photo, or when the user returns after a long gap
 * Physical computing interfaces that allow users to browse their photos on real pieces of paper, sort them, shuffle them, flip them over and write notes on them. The photos would be printed, or projected from a ceiling mounted project (e.g., like the Realtalk system at Dynamic land, though projects have a problem of resolution.) Notes and order would be detected by a camera, and everything would be used to organize the "real" digital collection.
 * More human mannerisms in chatbot dialog
-** Long pauses in attempts to encourage further elaboration like a real interviewer would
-** Typing notification (...) appearing and disappearing 
+    * Long pauses in attempts to encourage further elaboration like a real interviewer would
+    * Typing notification (...) appearing and disappearing 
 * More robotic mannerisms in chatbot dialog
-** Play up the fact that it's a robot through font and visual design choices. This may make people more comfortable with errors and mistakes that the robot might make. Make the robot socially awkward, because it will be anyway.
+    * Play up the fact that it's a robot through font and visual design choices. This may make people more comfortable with errors and mistakes that the robot might make. Make the robot socially awkward, because it will be anyway.
